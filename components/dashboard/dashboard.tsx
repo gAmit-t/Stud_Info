@@ -16,7 +16,6 @@ function Dashboard(): React.JSX.Element {
   const Drawer = createDrawerNavigator();
   return (
     <>
-      <Text>This is Dashboard component</Text>
       <Drawer.Navigator>
         <Drawer.Screen
           name="Notifications"
