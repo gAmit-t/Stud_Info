@@ -1,16 +1,15 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {StyleSheet, useColorScheme} from 'react-native';
 
+import {NavigationContainer, ParamListBase} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import 'react-native-gesture-handler';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import Dashboard from './components/dashboard/dashboard';
 import Login from './components/login/login';
+import {RootParamList} from './common/interfaces';
+import Profile from './components/profile/profile';
+import Notifications from './components/notifications/notifications';
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -19,25 +18,33 @@ function App(): React.JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  const Stack = createNativeStackNavigator<RootParamList>();
+
   return (
-    <View>
-      <SafeAreaView style={backgroundStyle}>
-        <StatusBar
-          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-          backgroundColor={backgroundStyle.backgroundColor}
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{headerShown: false}}
         />
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={backgroundStyle}>
-          <View
-            style={{
-              backgroundColor: isDarkMode ? Colors.black : Colors.white,
-            }}>
-            <Login></Login>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </View>
+        <Stack.Screen
+          name="Dashboard"
+          component={Dashboard}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={Profile}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Notifications"
+          component={Notifications}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 

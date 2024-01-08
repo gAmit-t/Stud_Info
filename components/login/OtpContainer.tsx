@@ -1,7 +1,18 @@
-import {Alert, Button, StyleSheet, Text, View} from 'react-native';
+import {
+  Alert,
+  Button,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import OtpInput from './OtpInput';
 import React, {useEffect} from 'react';
 import {OTP_COUNT} from '../../common/Constants';
+import {ParamListBase, useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootParamList} from '../../common/interfaces';
 
 type OtpContainerProps = {
   otpSent: boolean;
@@ -19,6 +30,7 @@ function OtpContainer({
   const [isOtpFilled, setIsOtpFilled] = React.useState(false);
   const [otpCode, setOtpCode] = React.useState('');
 
+  const navigation = useNavigation<StackNavigationProp<RootParamList>>();
   useEffect(() => {
     if (otpSent) {
       let countdown = 90;
@@ -37,19 +49,20 @@ function OtpContainer({
     }
   }, [otpSent, setTimeLeft]);
 
-  const handleOtpVerification = async () => {
-    try {
-      await fetch('apiEndpoint', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({otp: otpCode}),
-      });
-    } catch (error) {
-      console.error('Error:', error);
-    }
+  const handleOtpVerification = () => {
+    navigation.navigate('Dashboard');
+    // try {
+    //   await fetch('apiEndpoint', {
+    //     method: 'POST',
+    //     headers: {
+    //       Accept: 'application/json',
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({otp: otpCode}),
+    //   });
+    // } catch (error) {
+    //   console.error('Error:', error);
+    // }
   };
 
   function handleOtpFilled(code: number): void {
@@ -82,25 +95,27 @@ function OtpContainer({
   };
 
   return (
-    <View style={styles.container}>
-      <Text>Enter Otp</Text>
-      <OtpInput
-        otpCount={OTP_COUNT}
-        autoFocus={false}
-        onCodeFilled={handleOtpFilled}
-        onCodeChanged={handleOtpChanged}
-      />
-      {otpSent ? (
-        <Text onPress={handleOtpResend}>
-          <Text>Resend OTP</Text> in {timeLeft} seconds
-        </Text>
-      ) : null}
-      <Button
-        title="Verify OTP"
-        onPress={handleOtpVerification}
-        disabled={!isOtpFilled}
-      />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+        <Text>Enter Otp</Text>
+        <OtpInput
+          otpCount={OTP_COUNT}
+          autoFocus={false}
+          onCodeFilled={handleOtpFilled}
+          onCodeChanged={handleOtpChanged}
+        />
+        {otpSent ? (
+          <Text onPress={handleOtpResend}>
+            <Text>Resend OTP</Text> in {timeLeft} seconds
+          </Text>
+        ) : null}
+        <Button
+          title="Verify OTP"
+          onPress={handleOtpVerification}
+          disabled={!isOtpFilled}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 

@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {
   Button,
   Image,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -12,6 +13,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {viewheight, viewwidth} from '../../common/HelperFunctions';
 import {RE_DIGIT} from '../../common/Constants';
 import OtpContainer from './OtpContainer';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 type MobileNumberTextInputProps = {
   setOtpSent: React.Dispatch<React.SetStateAction<boolean>>;
@@ -28,10 +30,7 @@ function Login(): React.JSX.Element {
   };
 
   return (
-    <View
-      style={{
-        backgroundColor: backgroundStyle.backgroundColor,
-      }}>
+    <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <SplashImage></SplashImage>
       <MobileNumberTextInput
         setOtpSent={setOtpSent}
@@ -43,7 +42,7 @@ function Login(): React.JSX.Element {
           setOtpSent={setOtpSent}
           setTimeLeft={setTimeLeft}></OtpContainer>
       ) : null}
-    </View>
+    </ScrollView>
   );
 }
 
