@@ -1,14 +1,8 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, View, useColorScheme} from 'react-native';
+import React from 'react';
+import {StyleSheet, Text, useColorScheme} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {
-  DrawerContentScrollView,
-  DrawerItemList,
-  createDrawerNavigator,
-} from '@react-navigation/drawer';
-import {NavigationContainer} from '@react-navigation/native';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import Login from '../login/login';
-import Header from '../shared/header';
 import Notifications from '../notifications/notifications';
 import Profile from '../profile/profile';
 
