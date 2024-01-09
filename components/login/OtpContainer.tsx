@@ -50,7 +50,9 @@ function OtpContainer({
   }, [otpSent, setTimeLeft]);
 
   const handleOtpVerification = () => {
+    console.log('Dashboard')
     navigation.navigate('Dashboard');
+    //navigation.canGoBack();
     // try {
     //   await fetch('apiEndpoint', {
     //     method: 'POST',
@@ -97,7 +99,7 @@ function OtpContainer({
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
-        <Text>Enter Otp</Text>
+        {/* <Text>Enter Otp</Text> */}
         <OtpInput
           otpCount={OTP_COUNT}
           autoFocus={false}
@@ -106,7 +108,7 @@ function OtpContainer({
         />
         {otpSent ? (
           <Text onPress={handleOtpResend}>
-            <Text>Resend OTP</Text> in {timeLeft} seconds
+            <Text style={styles.txtRsend}>Resend OTP</Text> in {timeLeft} seconds
           </Text>
         ) : null}
         <Button
@@ -124,11 +126,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    width:'auto',
+    
   },
   title: {
     fontSize: 24,
     marginBottom: 20,
   },
+  txtRsend:{
+    color:'blue'
+  }
 });
 
 export default OtpContainer;

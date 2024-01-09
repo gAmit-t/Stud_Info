@@ -58,8 +58,8 @@ function SplashImage(): React.JSX.Element {
       }}>
       <Image
         style={{
-          height: viewheight(40),
-          width: viewwidth(80),
+          height: viewheight(20),
+          width: viewwidth(60),
           margin: 80,
           resizeMode: 'contain',
         }}
@@ -100,9 +100,10 @@ function MobileNumberTextInput({
   };
 
   return (
-    <>
-      <Text>Mobile Number</Text>
+    <View style={styles.container}>
+      <Text style={styles.txt}>Sign In</Text>
       <TextInput
+        style={styles.txtinput}
         onChangeText={text => onChangeNumber(restrictNumericInput(text))}
         value={number}
         placeholder="Enter Mobile Number"
@@ -112,11 +113,38 @@ function MobileNumberTextInput({
         title="Get Otp"
         onPress={handleSubmit}
         disabled={number.length !== 10}></Button>
-      {otpSent && <Text>OTP has been sent on your mobile number</Text>}
-    </>
+      {otpSent && (
+        <Text style={styles.txtOtp}>
+          OTP has been sent on your mobile number
+        </Text>
+      )}
+    </View>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontFamily: 'sans-serif',
+    fontWeight: 'bold',
+  },
+  txt: {
+    fontWeight: 'bold',
+    alignSelf: 'center',
+  },
+  txtOtp: {
+    fontWeight: 'normal',
+    alignSelf: 'center',
+  },
+  txtinput: {
+    fontWeight: 'normal',
+    flexWrap:'nowrap',
+    alignSelf: 'center',
+    paddingLeft: 4,
+    textAlign: 'center',
+    justifyContent:'space-evenly'
+  },
+});
 
 export default Login;
