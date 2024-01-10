@@ -84,19 +84,27 @@ function MobileNumberTextInput({
   };
 
   const handleSubmit = async () => {
-    setOtpSent(true);
-    // try {
-    //     await fetch('apiEndpoint', {
-    //         method: 'POST',
-    //         headers: {
-    //             Accept: 'application/json',
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({ number }),
-    //     });
-    // } catch (error) {
-    //     console.error('Error:', error);
-    // }
+    const data = {MobileNo: number};
+    const options = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data),
+    };
+
+    try {
+      const response = await fetch(
+        'http://10.0.2.2/api/Authenticate/GetOtp',
+        options,
+      );
+
+      if (!response.ok) {
+        console.log(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+    } catch (error) {
+      console.log('Fetch failed: ', error);
+    }
   };
 
   return (
@@ -139,11 +147,11 @@ const styles = StyleSheet.create({
   },
   txtinput: {
     fontWeight: 'normal',
-    flexWrap:'nowrap',
+    flexWrap: 'nowrap',
     alignSelf: 'center',
     paddingLeft: 4,
     textAlign: 'center',
-    justifyContent:'space-evenly'
+    justifyContent: 'space-evenly',
   },
 });
 
