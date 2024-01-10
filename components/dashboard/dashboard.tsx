@@ -5,6 +5,8 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import Login from '../login/login';
 import Notifications from '../notifications/notifications';
 import Profile from '../profile/profile';
+import HeaderComponent from '../shared/header';
+import FooterComponent from '../shared/footer';
 
 function Dashboard(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -16,23 +18,8 @@ function Dashboard(): React.JSX.Element {
   const Drawer = createDrawerNavigator();
   return (
     <>
-      <Drawer.Navigator>
-        <Drawer.Screen
-          name="Notifications"
-          component={Notifications}
-          options={{headerShown: true}}
-        />
-        <Drawer.Screen
-          name="View Profile"
-          component={Profile}
-          options={{headerShown: true}}
-        />
-        <Drawer.Screen
-          name="Logout"
-          component={Login}
-          options={{headerShown: false}}
-        />
-      </Drawer.Navigator>
+      <HeaderComponent></HeaderComponent>
+      <FooterComponent></FooterComponent>
     </>
   );
 }

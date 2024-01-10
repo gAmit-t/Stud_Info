@@ -50,8 +50,9 @@ function OtpContainer({
   }, [otpSent, setTimeLeft]);
 
   const handleOtpVerification = () => {
-    console.log('Dashboard')
-    navigation.navigate('Dashboard');
+    navigation.navigate('Main', {
+      screen: 'Dashboard',
+    });
     //navigation.canGoBack();
     // try {
     //   await fetch('apiEndpoint', {
@@ -108,7 +109,8 @@ function OtpContainer({
         />
         {otpSent ? (
           <Text onPress={handleOtpResend}>
-            <Text style={styles.txtRsend}>Resend OTP</Text> in {timeLeft} seconds
+            <Text style={styles.txtRsend}>Resend OTP</Text> in {timeLeft}{' '}
+            seconds
           </Text>
         ) : null}
         <Button
@@ -126,16 +128,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    width:'auto',
-    
+    width: 'auto',
   },
   title: {
     fontSize: 24,
     marginBottom: 20,
   },
-  txtRsend:{
-    color:'blue'
-  }
+  txtRsend: {
+    color: 'blue',
+  },
 });
 
 export default OtpContainer;

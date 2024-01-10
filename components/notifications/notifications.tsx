@@ -3,6 +3,8 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import {DrawerParamList} from '../../common/interfaces';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
+import HeaderComponent from '../shared/header';
+import FooterComponent from '../shared/footer';
 
 type NavigationProp = DrawerNavigationProp<DrawerParamList>;
 
@@ -15,7 +17,9 @@ const Notifications = () => {
         justifyContent: 'center',
         backgroundColor: '#f1f1f1',
       }}>
-      <Text>This is Notification component</Text>
+      <HeaderComponent></HeaderComponent>
+      <Text>This is notification component</Text>
+      <FooterComponent></FooterComponent>
     </View>
   );
 };

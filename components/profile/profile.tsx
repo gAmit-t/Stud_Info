@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import {DrawerParamList} from '../../common/interfaces';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
+import HeaderComponent from '../shared/header';
+import FooterComponent from '../shared/footer';
 
 type NavigationProp = DrawerNavigationProp<DrawerParamList>;
 
@@ -25,6 +27,7 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
+      <HeaderComponent></HeaderComponent>
       <Text style={styles.labeltop}>Profile</Text>
       {
         <Image
@@ -87,6 +90,7 @@ const Profile = () => {
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Cancel</Text>
       </TouchableOpacity>
+      <FooterComponent></FooterComponent>
     </View>
   );
 };
@@ -96,7 +100,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
   },
   profileImage: {
     width: 100,

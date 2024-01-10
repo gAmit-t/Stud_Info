@@ -1,32 +1,30 @@
-import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {View, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DrawerParamList} from '../../common/interfaces';
-import {viewheight, viewwidth} from '../../common/HelperFunctions';
 
 type NavigationProp = DrawerNavigationProp<DrawerParamList>;
 
-const HeaderComponent = () => {
+const FooterComponent = () => {
   const navigation = useNavigation<NavigationProp>();
 
   return (
-    <View style={styles.header}>
+    <View style={styles.footer}>
       <TouchableOpacity
-        onPress={() => navigation.openDrawer()}
+        onPress={() => navigation.navigate('Dashboard')}
         style={styles.iconContainer}>
         <Image
-          source={require('../../assets/menu_icon.png')}
+          source={require('../../assets/home_icon.png')}
           style={styles.icon}
           resizeMode="contain"
         />
       </TouchableOpacity>
-      <Text style={styles.text}>Profile Name</Text>
       <TouchableOpacity
-        onPress={() => navigation.navigate('Notifications')}
+        onPress={() => navigation.navigate('Login')}
         style={styles.iconContainer}>
         <Image
-          source={require('../../assets/notifications_icon.png')}
+          source={require('../../assets/logout_icon.png')}
           style={styles.icon}
           resizeMode="contain"
         />
@@ -36,10 +34,14 @@ const HeaderComponent = () => {
 };
 
 const styles = StyleSheet.create({
-  header: {
-    height: viewheight(5),
+  footer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 50,
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     flexDirection: 'row',
   },
   iconContainer: {
@@ -52,10 +54,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  text: {
-    flex: 1,
-    textAlign: 'center',
-  },
 });
 
-export default HeaderComponent;
+export default FooterComponent;
