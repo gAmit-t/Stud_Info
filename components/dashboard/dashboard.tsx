@@ -17,9 +17,11 @@ function Dashboard(): React.JSX.Element {
 
   const Drawer = createDrawerNavigator();
   return (
-    <View>
+    <View style={styles.container}>
       <HeaderComponent></HeaderComponent>
-      <Text>This is dashboard</Text>
+      <View style={styles.contentContainer}>
+        <Text>This is dashboard</Text>
+      </View>
       <FooterComponent></FooterComponent>
     </View>
   );
@@ -27,10 +29,12 @@ function Dashboard(): React.JSX.Element {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#f8f8f8',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 50,
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  contentContainer: {
+    marginTop: 10,
   },
   text: {
     fontSize: 18,

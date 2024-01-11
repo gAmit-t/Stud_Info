@@ -15,12 +15,12 @@ const NotificationCard = ({
   onClose,
 }: NotificationCardProps) => (
   <View style={styles.card}>
-    <Text style={styles.header}>{title}</Text>
-    <Text style={styles.timestamp}>{timestamp}</Text>
-    <Text style={styles.message}>{message}</Text>
     <TouchableOpacity style={styles.closeButton} onPress={onClose}>
       <Text style={styles.closeIcon}>X</Text>
     </TouchableOpacity>
+    <Text style={styles.header}>{title}</Text>
+    <Text style={styles.timestamp}>{timestamp}</Text>
+    <Text style={styles.message}>{message}</Text>
   </View>
 );
 
@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     borderRadius: 5,
+    position: 'relative',
   },
   header: {
     fontSize: 20,
@@ -55,7 +56,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   closeButton: {
-    alignSelf: 'flex-end',
+    position: 'absolute',
+    right: 10,
+    top: 10,
   },
   closeIcon: {
     fontSize: 20,

@@ -28,68 +28,68 @@ const Profile = () => {
   return (
     <View style={styles.container}>
       <HeaderComponent></HeaderComponent>
-      <Text style={styles.labeltop}>Profile</Text>
-      {
+      <View style={styles.contentContainer}>
+        <Text style={styles.labeltop}>Profile</Text>
         <Image
           source={require('../../assets/c1.jpg')}
           style={styles.profileImage}
         />
-      }
 
-      <Text style={styles.label}>Name</Text>
-      <TextInput
-        style={styles.input}
-        value={name}
-        onChangeText={text => setName(text)}
-        placeholder="Enter your name"
-      />
+        <Text style={styles.label}>Name</Text>
+        <TextInput
+          style={styles.input}
+          value={name}
+          onChangeText={text => setName(text)}
+          placeholder="Enter your name"
+        />
 
-      <Text style={styles.label}>Roll Number</Text>
-      <TextInput
-        style={styles.input}
-        value={rollNo}
-        onChangeText={text => setRollNo(text)}
-        placeholder="Enter your roll number"
-      />
+        <Text style={styles.label}>Roll Number</Text>
+        <TextInput
+          style={styles.input}
+          value={rollNo}
+          onChangeText={text => setRollNo(text)}
+          placeholder="Enter your roll number"
+        />
 
-      <Text style={styles.label}>Gender</Text>
-      <View style={styles.radioButton}>
-        <TouchableOpacity
-          style={styles.radioOption}
-          onPress={() => setGender('male')}>
-          <View style={styles.radioCircle}></View>
-          <Text>Male</Text>
+        <Text style={styles.label}>Gender</Text>
+        <View style={styles.radioButton}>
+          <TouchableOpacity
+            style={styles.radioOption}
+            onPress={() => setGender('male')}>
+            <View style={styles.radioCircle}></View>
+            <Text>Male</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.radioOption}
+            onPress={() => setGender('female')}>
+            <View style={styles.radioCircle}></View>
+            <Text>Female</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.radioOption}
+            onPress={() => setGender('other')}>
+            <View style={styles.radioCircle}></View>
+            <Text>Other</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Text style={styles.label}>Address</Text>
+        <TextInput
+          style={styles.input}
+          value={address}
+          onChangeText={text => setAddress(text)}
+          placeholder="Enter your address"
+          multiline
+        />
+
+        <TouchableOpacity style={styles.button} onPress={handleRegistration}>
+          <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.radioOption}
-          onPress={() => setGender('female')}>
-          <View style={styles.radioCircle}></View>
-          <Text>Female</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.radioOption}
-          onPress={() => setGender('other')}>
-          <View style={styles.radioCircle}></View>
-          <Text>Other</Text>
+
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
       </View>
-
-      <Text style={styles.label}>Address</Text>
-      <TextInput
-        style={styles.input}
-        value={address}
-        onChangeText={text => setAddress(text)}
-        placeholder="Enter your address"
-        multiline
-      />
-
-      <TouchableOpacity style={styles.button} onPress={handleRegistration}>
-        <Text style={styles.buttonText}>Register</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Cancel</Text>
-      </TouchableOpacity>
       <FooterComponent></FooterComponent>
     </View>
   );
@@ -98,8 +98,11 @@ const Profile = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  contentContainer: {
+    marginTop: 10,
   },
   profileImage: {
     width: 100,
