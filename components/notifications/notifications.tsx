@@ -1,27 +1,80 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
-import {View, Text} from 'react-native';
-import {DrawerParamList} from '../../common/interfaces';
+import React, {useState, useEffect} from 'react';
+import {View, Text, StyleSheet} from 'react-native';
+import {DrawerParamList, INotificationCardItem} from '../../common/interfaces';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import HeaderComponent from '../shared/header';
 import FooterComponent from '../shared/footer';
+import NotificationCard from './NotificationCard';
 
 type NavigationProp = DrawerNavigationProp<DrawerParamList>;
 
 const Notifications = () => {
   const navigation = useNavigation<NavigationProp>();
+  const [notifications, setNotifications] = useState<INotificationCardItem[]>([
+    {
+      id: '1',
+      title: 'Title 1',
+      timestamp: 'Timestamp 1',
+      message: 'Message 1',
+      isClosed: false,
+    },
+    {
+      id: '2',
+      title: 'Title 2',
+      timestamp: 'Timestamp 2',
+      message: 'Message 2',
+      isClosed: false,
+    },
+  ]);
+
+  //  useEffect(() => {
+  //  fetch('https://api.example.com/notifications')
+  //    .then(response => response.json())
+  //    .then((data: INotificationCardItem[]) => {
+  //      setNotifications(data);
+  //    })
+  //    .catch(error => console.error(`Error fetching notifications: ${error}`));
+  //  }, []);
+
+  const handleClose = (id: string) => {
+    setNotifications(prevNotifications =>
+      prevNotifications.map(notification =>
+        notification.id === id
+          ? {...notification, isClosed: true}
+          : notification,
+      ),
+    );
+  };
+
   return (
-    <View
-      style={{
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#f1f1f1',
-      }}>
+    <View style={styles.container}>
       <HeaderComponent></HeaderComponent>
-      <Text>This is notification component</Text>
+      {notifications.map(
+        notification =>
+          !notification.isClosed && (
+            <NotificationCard
+              key={notification.id}
+              id={notification.id}
+              title={notification.title}
+              timestamp={notification.timestamp}
+              message={notification.message}
+              isClosed={notification.isClosed}
+              onClose={() => handleClose(notification.id)}
+            />
+          ),
+      )}
       <FooterComponent></FooterComponent>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+});
 
 export default Notifications;

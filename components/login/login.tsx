@@ -84,24 +84,27 @@ function MobileNumberTextInput({
   };
 
   const handleSubmit = async () => {
+    setOtpSent(true);
     const data = {MobileNo: number};
     const options = {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(data),
     };
-
     try {
       const response = await fetch(
-        'http://10.0.2.2/api/Authenticate/GetOtp',
+        // 'http://10.0.2.2/api/Authenticate/GetOtp',
+        'http://agdisk.com/oldV/api/Authenticate/GetOtp',
         options,
       );
-
       if (!response.ok) {
         console.log(`HTTP error! status: ${response.status}`);
       }
-
+      // console.log(response);
       const result = await response.json();
+      console.log('Result: ', result);
     } catch (error) {
       console.log('Fetch failed: ', error);
     }

@@ -3,6 +3,7 @@ import {View, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DrawerParamList} from '../../common/interfaces';
+import {viewheight} from '../../common/HelperFunctions';
 
 type NavigationProp = DrawerNavigationProp<DrawerParamList>;
 
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 50,
+    height: viewheight(5),
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',

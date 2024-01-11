@@ -10,3 +10,12 @@ export interface RootParamList extends ParamListBase {
 export interface DrawerParamList extends ParamListBase {
   Login: undefined;
 }
+
+//NotificationCardItem
+export interface INotificationCardItem {
+  id: string;
+  title: string;
+  timestamp: string;
+  message: string;
+  isClosed: boolean;
+}
