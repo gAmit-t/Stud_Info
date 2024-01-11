@@ -13,7 +13,6 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {viewheight, viewwidth} from '../../common/HelperFunctions';
 import {RE_DIGIT} from '../../common/Constants';
 import OtpContainer from './OtpContainer';
-import {StackNavigationProp} from '@react-navigation/stack';
 
 type MobileNumberTextInputProps = {
   setOtpSent: React.Dispatch<React.SetStateAction<boolean>>;
