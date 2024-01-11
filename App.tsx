@@ -1,5 +1,5 @@
-import React from 'react';
-import {StyleSheet, useColorScheme} from 'react-native';
+import React, {useEffect} from 'react';
+import {Alert, StyleSheet, useColorScheme} from 'react-native';
 
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
@@ -11,6 +11,7 @@ import Dashboard from './components/dashboard/dashboard';
 import Login from './components/login/login';
 import Notifications from './components/notifications/notifications';
 import Profile from './components/profile/profile';
+import messaging from '@react-native-firebase/messaging';
 
 const MainStack = () => {
   const Drawer = createDrawerNavigator();
@@ -41,6 +42,16 @@ const MainStack = () => {
 };
 
 function App(): React.JSX.Element {
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert(
+        'A new FCM message arrived!',
+        JSON.stringify(remoteMessage.notification?.body),
+      );
+    });
+    return unsubscribe;
+  }, []);
+
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Button,
   Image,
@@ -13,6 +13,11 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {viewheight, viewwidth} from '../../common/HelperFunctions';
 import {RE_DIGIT} from '../../common/Constants';
 import OtpContainer from './OtpContainer';
+import {PermissionsAndroid} from 'react-native';
+import messaging from '@react-native-firebase/messaging';
+
+//Permission request for sending message on android
+PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 
 type MobileNumberTextInputProps = {
   setOtpSent: React.Dispatch<React.SetStateAction<boolean>>;
@@ -82,31 +87,90 @@ function MobileNumberTextInput({
     }
   };
 
-  const handleSubmit = async () => {
-    setOtpSent(true);
-    const data = {MobileNo: number};
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+  //Hook to listen and handle fcmToken changes when user resets data or reinstalls app
+  useEffect(() => {
+    const unsubscribe = messaging().onTokenRefresh(fcmToken => {
+      console.log('FCM Token Refreshed: ', fcmToken);
+      const data = {MobileNo: number, fcmToken: fcmToken};
+      // Send the new FCM token to your server here
+      //   const options = {
+      //     method: 'POST',
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //     body: JSON.stringify(data),
+      //   };
+      //   try {
+      //     const response = await fetch(
+      //       'http://agdisk.com/oldV/api/Authenticate/GetOtp',
+      //       options,
+      //     );
+      //     if (!response.ok) {
+      //       console.log(`HTTP error! status: ${response.status}`);
+      //     }
+      //     const result = await response.json();
+      //     console.log('Result: ', result);
+      //   } catch (error) {
+      //     console.log('Fetch failed: ', error);
+      //   }
+    });
+    return unsubscribe;
+  }, []);
+
+  //Function to send notification when the API call to generate otp is successfull
+  const sendNotification = async (fcmToken: string, otp: number) => {
+    const message = {
+      to: fcmToken,
+      notification: {
+        title: 'OTP',
+        body: `Your OTP is ${otp}`,
       },
-      body: JSON.stringify(data),
     };
     try {
-      const response = await fetch(
-        // 'http://10.0.2.2/api/Authenticate/GetOtp',
-        'http://agdisk.com/oldV/api/Authenticate/GetOtp',
-        options,
-      );
-      if (!response.ok) {
-        console.log(`HTTP error! status: ${response.status}`);
-      }
-      // console.log(response);
-      const result = await response.json();
-      console.log('Result: ', result);
+      const response = await fetch('https://fcm.googleapis.com/fcm/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `key=AAAAry3VVUo:APA91bHXx9YbsSXsjvBPd18JPVh_6wasD9zSTXH7i3smKc6KVJB0UF1PsRjR_CpEAMQ6DcMJQEOQDqfMGHh0oNnBIemf9AZAQdpd1zn_r44Zs_PwrySyBuo3fT8DfDBhZwb5YkUGcdQt`,
+        },
+        body: JSON.stringify(message),
+      });
+
+      const data = await response.json();
+      console.log(data);
     } catch (error) {
-      console.log('Fetch failed: ', error);
+      console.error('Failed to send notification:', error);
     }
+  };
+
+  const handleSubmit = async () => {
+    setOtpSent(true);
+    const fcmToken = await messaging().getToken();
+
+    const data = {MobileNo: number, fcmToken: fcmToken};
+    console.log(JSON.stringify(data));
+    //   const options = {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(data),
+    //   };
+    //   try {
+    //     const response = await fetch(
+    //       'http://agdisk.com/oldV/api/Authenticate/GetOtp',
+    //       options,
+    //     );
+    //     if (!response.ok) {
+    //       console.log(`HTTP error! status: ${response.status}`);
+    //     }
+    //     const result = await response.json();
+    //     console.log('Result: ', result);
+    //   } catch (error) {
+    //     console.log('Fetch failed: ', error);
+    //   }
+    const otp = 1234;
+    await sendNotification(fcmToken, otp);
   };
 
   return (
