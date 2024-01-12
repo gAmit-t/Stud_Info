@@ -16,8 +16,8 @@ import HeaderComponent from '../shared/header';
 import FooterComponent from '../shared/footer';
 import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { viewheight } from '../../common/HelperFunctions';
-import { scrollTo } from 'react-native-reanimated';
+import {viewheight} from '../../common/HelperFunctions';
+import {scrollTo} from 'react-native-reanimated';
 
 type NavigationProp = DrawerNavigationProp<DrawerParamList>;
 
@@ -42,7 +42,7 @@ const Profile = () => {
     setStates('');
     setCity('');
     setEmail('');
-  }; 
+  };
 
   const handleRegistration = () => {
     //    if (!StudName || !RollNo || !DOB || !Gender || !Stud_address || !States || !city || !email) {
@@ -52,7 +52,7 @@ const Profile = () => {
     // Prepare the registration data as a JSON string
     const registrationData = JSON.stringify({
       StudName,
-      RollNo, 
+      RollNo,
       DOB,
       Gender,
       Stud_address,
@@ -196,9 +196,8 @@ const Profile = () => {
       {/* <FooterComponent ></FooterComponent> */}
 
       <View style={styles.footer}>
-      <FooterComponent ></FooterComponent>
-          </View>
-
+        <FooterComponent></FooterComponent>
+      </View>
     </View>
   );
 };
@@ -207,8 +206,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 20,
-    
+    paddingTop: 20, 
   },
   contentContainer: {
     marginTop: 10,
@@ -234,9 +232,9 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor:'white',
+    backgroundColor: 'white',
     // flexDirection:'row',
-    height:50,
+    height: 50,
     // alignItems:'center',
   },
 
