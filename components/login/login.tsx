@@ -165,26 +165,26 @@ function MobileNumberTextInput({
 
     const data = {MobileNo: number, fcmToken: fcmToken, deviceId: deviceId};
     console.log(JSON.stringify(data));
-    //   const options = {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(data),
-    //   };
-    //   try {
-    //     const response = await fetch(
-    //       'http://agdisk.com/oldV/api/Authenticate/GetOtp',
-    //       options,
-    //     );
-    //     if (!response.ok) {
-    //       console.log(`HTTP error! status: ${response.status}`);
-    //     }
-    //     const result = await response.json();
-    //     console.log('Result: ', result);
-    //   } catch (error) {
-    //     console.log('Fetch failed: ', error);
-    //   }
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      };
+      try {
+        const response = await fetch(
+          'http://agdisk.com/oldV/api/Authenticate/GetOtp',
+          options,
+        );
+        if (!response.ok) {
+          console.log(`HTTP error! status: ${response.status}`);
+        }
+        const result = await response.json();
+        console.log('Result: ', result);
+      } catch (error) {
+        console.log('Fetch failed: ', error);
+      }
     const otp = 1234;
     await sendNotification(fcmToken, otp);
   };
