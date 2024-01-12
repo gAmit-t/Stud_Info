@@ -207,8 +207,8 @@ function MobileNumberTextInput({
     //   } catch (error) {
     //     console.log('Fetch failed: ', error);
     //   }
-    const otp = 1234;
-    await sendNotification(fcmToken, otp);
+    // const otp = 1234;
+    // await sendNotification(fcmToken, otp);
   };
 
   return (
