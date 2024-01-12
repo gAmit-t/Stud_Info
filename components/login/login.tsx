@@ -16,6 +16,7 @@ import OtpContainer from './OtpContainer';
 import {PermissionsAndroid} from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import DeviceInfo from 'react-native-device-info';
+import auth from '@react-native-firebase/auth';
 
 //Permission request for sending message on android
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
@@ -165,28 +166,49 @@ function MobileNumberTextInput({
 
     const data = {MobileNo: number, fcmToken: fcmToken, deviceId: deviceId};
     console.log(JSON.stringify(data));
-      const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      };
-      try {
-        const response = await fetch(
-          'http://agdisk.com/oldV/api/Authenticate/GetOtp',
-          options,
-        );
-        if (!response.ok) {
-          console.log(`HTTP error! status: ${response.status}`);
-        }
-        const result = await response.json();
-        console.log('Result: ', result);
-      } catch (error) {
-        console.log('Fetch failed: ', error);
-      }
-    const otp = 1234;
-    await sendNotification(fcmToken, otp);
+
+    // Send a verification code to the user's mobile number
+    const confirmation = await auth().signInWithPhoneNumber(
+      '+91' + number.toString(),
+    );
+    console.log(confirmation);
+    // After the user enters the verification code, get the user's account
+    // const userCredential = await confirmation.confirm(code);
+    // const user = userCredential.user;
+
+    // // Update the user's profile with the mobile number
+    // await user.updateProfile({phoneNumber: number});
+
+    // // Register the mobile number to the user's email address
+    // await user.linkWithCredential(
+    //   auth.PhoneAuthProvider.credential(confirmation.verificationId, code),
+    // );
+
+    // // Now the user's mobile number is linked to their email address
+    // console.log("Mobile number is now linked to the user's email address.");
+
+    //   const options = {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(data),
+    //   };
+    //   try {
+    //     const response = await fetch(
+    //       'http://agdisk.com/oldV/api/Authenticate/GetOtp',
+    //       options,
+    //     );
+    //     if (!response.ok) {
+    //       console.log(`HTTP error! status: ${response.status}`);
+    //     }
+    //     const result = await response.json();
+    //     console.log('Result: ', result);
+    //   } catch (error) {
+    //     console.log('Fetch failed: ', error);
+    //   }
+    // const otp = 1234;
+    // await sendNotification(fcmToken, otp);
   };
 
   return (
