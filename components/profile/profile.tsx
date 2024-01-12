@@ -42,7 +42,7 @@ const Profile = () => {
     setStates('');
     setCity('');
     setEmail('');
-  };
+  }; 
 
   const handleRegistration = () => {
     //    if (!StudName || !RollNo || !DOB || !Gender || !Stud_address || !States || !city || !email) {
@@ -52,7 +52,7 @@ const Profile = () => {
     // Prepare the registration data as a JSON string
     const registrationData = JSON.stringify({
       StudName,
-      RollNo,
+      RollNo, 
       DOB,
       Gender,
       Stud_address,
