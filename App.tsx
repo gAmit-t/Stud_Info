@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {Alert, StyleSheet, useColorScheme} from 'react-native';
 
+import messaging from '@react-native-firebase/messaging';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -11,7 +12,12 @@ import Dashboard from './components/dashboard/dashboard';
 import Login from './components/login/login';
 import Notifications from './components/notifications/notifications';
 import Profile from './components/profile/profile';
-import messaging from '@react-native-firebase/messaging';
+import firebase from '@react-native-firebase/app';
+import firebaseConfig from './firebaseConfig';
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 const MainStack = () => {
   const Drawer = createDrawerNavigator();

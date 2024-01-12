@@ -15,6 +15,7 @@ import {RE_DIGIT} from '../../common/Constants';
 import OtpContainer from './OtpContainer';
 import {PermissionsAndroid} from 'react-native';
 import messaging from '@react-native-firebase/messaging';
+import DeviceInfo from 'react-native-device-info';
 
 //Permission request for sending message on android
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
@@ -22,23 +23,37 @@ PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 type MobileNumberTextInputProps = {
   setOtpSent: React.Dispatch<React.SetStateAction<boolean>>;
   otpSent: boolean;
+  deviceId: string;
 };
 
 function Login(): React.JSX.Element {
   const [otpSent, setOtpSent] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
-  const isDarkMode = useColorScheme() === 'dark';
+  const [deviceId, setDeviceId] = useState('');
 
+  const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  //Hook to capture DeviceId
+  useEffect(() => {
+    DeviceInfo.getUniqueId()
+      .then(uniqueId => {
+        setDeviceId(uniqueId);
+      })
+      .catch(error => {
+        console.log('Error getting device ID: ', error);
+      });
+  }, []);
 
   return (
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <SplashImage></SplashImage>
       <MobileNumberTextInput
         setOtpSent={setOtpSent}
-        otpSent={otpSent}></MobileNumberTextInput>
+        otpSent={otpSent}
+        deviceId={deviceId}></MobileNumberTextInput>
       {otpSent ? (
         <OtpContainer
           otpSent={otpSent}
@@ -76,6 +91,7 @@ function SplashImage(): React.JSX.Element {
 function MobileNumberTextInput({
   setOtpSent,
   otpSent,
+  deviceId,
 }: MobileNumberTextInputProps): React.JSX.Element {
   const [number, onChangeNumber] = React.useState('');
 
@@ -91,7 +107,7 @@ function MobileNumberTextInput({
   useEffect(() => {
     const unsubscribe = messaging().onTokenRefresh(fcmToken => {
       console.log('FCM Token Refreshed: ', fcmToken);
-      const data = {MobileNo: number, fcmToken: fcmToken};
+      const data = {MobileNo: number, fcmToken: fcmToken, deviceId: deviceId};
       // Send the new FCM token to your server here
       //   const options = {
       //     method: 'POST',
@@ -147,7 +163,7 @@ function MobileNumberTextInput({
     setOtpSent(true);
     const fcmToken = await messaging().getToken();
 
-    const data = {MobileNo: number, fcmToken: fcmToken};
+    const data = {MobileNo: number, fcmToken: fcmToken, deviceId: deviceId};
     console.log(JSON.stringify(data));
     //   const options = {
     //     method: 'POST',
