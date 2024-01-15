@@ -14,6 +14,7 @@ import Notifications from './components/notifications/notifications';
 import Profile from './components/profile/profile';
 import firebase from '@react-native-firebase/app';
 import firebaseConfig from './firebaseConfig';
+import firestore from '@react-native-firebase/firestore';
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
