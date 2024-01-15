@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
+  ActivityIndicator,
   Button,
   Image,
   ScrollView,
@@ -24,7 +25,7 @@ PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 type MobileNumberTextInputProps = {
   setOtpSent: React.Dispatch<React.SetStateAction<boolean>>;
   setConfirm: React.Dispatch<React.SetStateAction<object | null>>;
-  setFcmToken: React.Dispatch<React.SetStateAction<string>>;
+  // setFcmToken: React.Dispatch<React.SetStateAction<string>>;
   otpSent: boolean;
   deviceId: string;
   fcmToken: string;
@@ -53,13 +54,29 @@ function Login(): React.JSX.Element {
       });
   }, []);
 
+  //Hook to generate and store the FCM token
+  useEffect(() => {
+    const getToken = async () => {
+      const token = await messaging().getToken();
+      setFcmToken(token);
+    };
+    getToken();
+  }, []);
+
+  //Hook to listen and handle fcmToken changes when user resets data or reinstalls app
+  useEffect(() => {
+    const unsubscribe = messaging().onTokenRefresh(Token => {
+      setFcmToken(Token);
+    });
+    return unsubscribe;
+  }, []);
+
   return (
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <SplashImage></SplashImage>
       <MobileNumberTextInput
         setOtpSent={setOtpSent}
         setConfirm={setConfirm}
-        setFcmToken={setFcmToken}
         fcmToken={fcmToken}
         otpSent={otpSent}
         deviceId={deviceId}></MobileNumberTextInput>
@@ -100,13 +117,13 @@ function SplashImage(): React.JSX.Element {
 
 function MobileNumberTextInput({
   setOtpSent,
-  setFcmToken,
   setConfirm,
   otpSent,
   deviceId,
   fcmToken,
 }: MobileNumberTextInputProps): React.JSX.Element {
   const [number, onChangeNumber] = React.useState('');
+  const [loading, setLoading] = useState(false);
 
   const restrictNumericInput = (text: string) => {
     if (!RE_DIGIT.test(text)) {
@@ -116,116 +133,22 @@ function MobileNumberTextInput({
     }
   };
 
-  //Hook to listen and handle fcmToken changes when user resets data or reinstalls app
-  useEffect(() => {
-    const unsubscribe = messaging().onTokenRefresh(Token => {
-      setFcmToken(Token);
-      const data = {MobileNo: number, fcmToken: fcmToken, deviceId: deviceId};
-      // Send the new FCM token to your server here
-      //   const options = {
-      //     method: 'POST',
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //     body: JSON.stringify(data),
-      //   };
-      //   try {
-      //     const response = await fetch(
-      //       'http://agdisk.com/oldV/api/Authenticate/GetOtp',
-      //       options,
-      //     );
-      //     if (!response.ok) {
-      //       console.log(`HTTP error! status: ${response.status}`);
-      //     }
-      //     const result = await response.json();
-      //     console.log('Result: ', result);
-      //   } catch (error) {
-      //     console.log('Fetch failed: ', error);
-      //   }
-    });
-    return unsubscribe;
-  }, []);
-
-  //Function to send notification when the API call to generate otp is successfull
-  const sendNotification = async (fcmToken: string, otp: number) => {
-    const message = {
-      to: fcmToken,
-      notification: {
-        title: 'OTP',
-        body: `Your OTP is ${otp}`,
-      },
-    };
-    try {
-      const response = await fetch('https://fcm.googleapis.com/fcm/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `key=AAAAry3VVUo:APA91bHXx9YbsSXsjvBPd18JPVh_6wasD9zSTXH7i3smKc6KVJB0UF1PsRjR_CpEAMQ6DcMJQEOQDqfMGHh0oNnBIemf9AZAQdpd1zn_r44Zs_PwrySyBuo3fT8DfDBhZwb5YkUGcdQt`,
-        },
-        body: JSON.stringify(message),
-      });
-
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error('Failed to send notification:', error);
-    }
-  };
-
   const handleSubmit = async () => {
-    const Token = await messaging().getToken();
-    setFcmToken(Token);
     const data = {MobileNo: number, fcmToken: fcmToken, deviceId: deviceId};
     console.log(JSON.stringify(data));
-
+    setLoading(true);
     // Send a verification code to the user's mobile number
     try {
       const confirmation = await auth().signInWithPhoneNumber(
         '+91' + number.toString(),
       );
-      console.log(confirmation);
       setConfirm(confirmation);
       setOtpSent(true);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
-    //After the user enters the verification code, get the user's account
-    // const userCredential = await confirmation.confirm(code);
-    // const user = userCredential.user;
-
-    // // Update the user's profile with the mobile number
-    // await user.updateProfile({phoneNumber: number});
-
-    // // Register the mobile number to the user's email address
-    // await user.linkWithCredential(
-    //   auth.PhoneAuthProvider.credential(confirmation.verificationId, code),
-    // );
-
-    // // Now the user's mobile number is linked to their email address
-    // console.log("Mobile number is now linked to the user's email address.");
-
-    //   const options = {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(data),
-    //   };
-    //   try {
-    //     const response = await fetch(
-    //       'http://agdisk.com/oldV/api/Authenticate/GetOtp',
-    //       options,
-    //     );
-    //     if (!response.ok) {
-    //       console.log(`HTTP error! status: ${response.status}`);
-    //     }
-    //     const result = await response.json();
-    //     console.log('Result: ', result);
-    //   } catch (error) {
-    //     console.log('Fetch failed: ', error);
-    //   }
-    // const otp = 1234;
-    // await sendNotification(fcmToken, otp);
   };
 
   return (
@@ -242,6 +165,7 @@ function MobileNumberTextInput({
         title="Get Otp"
         onPress={handleSubmit}
         disabled={number.length !== 10}></Button>
+      {loading && <ActivityIndicator size="large" color="#0000ff" />}
       {otpSent && (
         <Text style={styles.txtOtp}>
           OTP has been sent on your mobile number

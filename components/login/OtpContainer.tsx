@@ -35,6 +35,7 @@ function OtpContainer({
 
   const navigation = useNavigation<StackNavigationProp<RootParamList>>();
   useEffect(() => {
+    console.log(auth().currentUser);
     if (otpSent) {
       let countdown = 90;
       setTimeLeft(countdown);
@@ -53,6 +54,8 @@ function OtpContainer({
   }, [otpSent, setTimeLeft]);
 
   const handleOtpVerification = async () => {
+    let user = auth().currentUser;
+    console.log(user);
     try {
       const credential = auth.PhoneAuthProvider.credential(
         confirm.verificationId,

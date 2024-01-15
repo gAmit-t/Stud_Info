@@ -4,11 +4,22 @@ import {useNavigation} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DrawerParamList} from '../../common/interfaces';
 import {viewheight} from '../../common/HelperFunctions';
+import auth from '@react-native-firebase/auth';
 
 type NavigationProp = DrawerNavigationProp<DrawerParamList>;
 
 const FooterComponent = () => {
   const navigation = useNavigation<NavigationProp>();
+
+  const handleSignOut = async () => {
+    if (auth().currentUser) {
+      await auth().signOut();
+    }
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'Login'}],
+    });
+  };
 
   return (
     <View style={styles.footer}>
@@ -21,9 +32,7 @@ const FooterComponent = () => {
           resizeMode="contain"
         />
       </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Login')}
-        style={styles.iconContainer}>
+      <TouchableOpacity onPress={handleSignOut} style={styles.iconContainer}>
         <Image
           source={require('../../assets/logout_icon.png')}
           style={styles.icon}

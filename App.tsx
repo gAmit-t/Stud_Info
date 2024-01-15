@@ -41,7 +41,7 @@ const MainStack = () => {
       <Drawer.Screen
         name="Logout"
         component={Login}
-        options={{headerShown: false}}
+        options={{headerShown: false, unmountOnBlur: true}}
       />
     </Drawer.Navigator>
   );
