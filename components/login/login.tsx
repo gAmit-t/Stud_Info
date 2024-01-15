@@ -21,14 +21,13 @@ import auth from '@react-native-firebase/auth';
 
 //Permission request for sending message on android
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
 
 type MobileNumberTextInputProps = {
   setOtpSent: React.Dispatch<React.SetStateAction<boolean>>;
   setConfirm: React.Dispatch<React.SetStateAction<object | null>>;
   // setFcmToken: React.Dispatch<React.SetStateAction<string>>;
   otpSent: boolean;
-  deviceId: string;
-  fcmToken: string;
 };
 
 function Login(): React.JSX.Element {
@@ -77,14 +76,14 @@ function Login(): React.JSX.Element {
       <MobileNumberTextInput
         setOtpSent={setOtpSent}
         setConfirm={setConfirm}
-        fcmToken={fcmToken}
-        otpSent={otpSent}
-        deviceId={deviceId}></MobileNumberTextInput>
+        otpSent={otpSent}></MobileNumberTextInput>
       {otpSent ? (
         <OtpContainer
           otpSent={otpSent}
           confirm={confirm}
           timeLeft={timeLeft}
+          deviceId={deviceId}
+          fcmToken={fcmToken}
           setOtpSent={setOtpSent}
           setTimeLeft={setTimeLeft}></OtpContainer>
       ) : null}
@@ -119,8 +118,6 @@ function MobileNumberTextInput({
   setOtpSent,
   setConfirm,
   otpSent,
-  deviceId,
-  fcmToken,
 }: MobileNumberTextInputProps): React.JSX.Element {
   const [number, onChangeNumber] = React.useState('');
   const [loading, setLoading] = useState(false);
@@ -134,8 +131,6 @@ function MobileNumberTextInput({
   };
 
   const handleSubmit = async () => {
-    const data = {MobileNo: number, fcmToken: fcmToken, deviceId: deviceId};
-    console.log(JSON.stringify(data));
     setLoading(true);
     // Send a verification code to the user's mobile number
     try {
