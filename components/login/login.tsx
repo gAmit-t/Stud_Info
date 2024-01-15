@@ -23,14 +23,19 @@ PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 
 type MobileNumberTextInputProps = {
   setOtpSent: React.Dispatch<React.SetStateAction<boolean>>;
+  setConfirm: React.Dispatch<React.SetStateAction<object | null>>;
+  setFcmToken: React.Dispatch<React.SetStateAction<string>>;
   otpSent: boolean;
   deviceId: string;
+  fcmToken: string;
 };
 
 function Login(): React.JSX.Element {
   const [otpSent, setOtpSent] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
   const [deviceId, setDeviceId] = useState('');
+  const [fcmToken, setFcmToken] = useState('');
+  const [confirm, setConfirm] = useState<object | null>(null);
 
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
@@ -53,11 +58,15 @@ function Login(): React.JSX.Element {
       <SplashImage></SplashImage>
       <MobileNumberTextInput
         setOtpSent={setOtpSent}
+        setConfirm={setConfirm}
+        setFcmToken={setFcmToken}
+        fcmToken={fcmToken}
         otpSent={otpSent}
         deviceId={deviceId}></MobileNumberTextInput>
       {otpSent ? (
         <OtpContainer
           otpSent={otpSent}
+          confirm={confirm}
           timeLeft={timeLeft}
           setOtpSent={setOtpSent}
           setTimeLeft={setTimeLeft}></OtpContainer>
@@ -91,8 +100,11 @@ function SplashImage(): React.JSX.Element {
 
 function MobileNumberTextInput({
   setOtpSent,
+  setFcmToken,
+  setConfirm,
   otpSent,
   deviceId,
+  fcmToken,
 }: MobileNumberTextInputProps): React.JSX.Element {
   const [number, onChangeNumber] = React.useState('');
 
@@ -106,8 +118,8 @@ function MobileNumberTextInput({
 
   //Hook to listen and handle fcmToken changes when user resets data or reinstalls app
   useEffect(() => {
-    const unsubscribe = messaging().onTokenRefresh(fcmToken => {
-      console.log('FCM Token Refreshed: ', fcmToken);
+    const unsubscribe = messaging().onTokenRefresh(Token => {
+      setFcmToken(Token);
       const data = {MobileNo: number, fcmToken: fcmToken, deviceId: deviceId};
       // Send the new FCM token to your server here
       //   const options = {
@@ -161,18 +173,23 @@ function MobileNumberTextInput({
   };
 
   const handleSubmit = async () => {
-    setOtpSent(true);
-    const fcmToken = await messaging().getToken();
-
+    const Token = await messaging().getToken();
+    setFcmToken(Token);
     const data = {MobileNo: number, fcmToken: fcmToken, deviceId: deviceId};
     console.log(JSON.stringify(data));
 
     // Send a verification code to the user's mobile number
-    const confirmation = await auth().signInWithPhoneNumber(
-      '+91' + number.toString(),
-    );
-    console.log(confirmation);
-    // After the user enters the verification code, get the user's account
+    try {
+      const confirmation = await auth().signInWithPhoneNumber(
+        '+91' + number.toString(),
+      );
+      console.log(confirmation);
+      setConfirm(confirmation);
+      setOtpSent(true);
+    } catch (error) {
+      console.log(error);
+    }
+    //After the user enters the verification code, get the user's account
     // const userCredential = await confirmation.confirm(code);
     // const user = userCredential.user;
 

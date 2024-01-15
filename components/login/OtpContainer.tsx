@@ -8,15 +8,17 @@ import {
   View,
 } from 'react-native';
 import OtpInput from './OtpInput';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {OTP_COUNT} from '../../common/Constants';
 import {ParamListBase, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootParamList} from '../../common/interfaces';
+import auth from '@react-native-firebase/auth';
 
 type OtpContainerProps = {
   otpSent: boolean;
   timeLeft: number;
+  confirm: any;
   setOtpSent: React.Dispatch<React.SetStateAction<boolean>>;
   setTimeLeft: React.Dispatch<React.SetStateAction<number>>;
 };
@@ -24,11 +26,12 @@ type OtpContainerProps = {
 function OtpContainer({
   otpSent,
   timeLeft,
+  confirm,
   setOtpSent,
   setTimeLeft,
 }: OtpContainerProps) {
   const [isOtpFilled, setIsOtpFilled] = React.useState(false);
-  const [otpCode, setOtpCode] = React.useState('');
+  const [code, onChangeCode] = useState('');
 
   const navigation = useNavigation<StackNavigationProp<RootParamList>>();
   useEffect(() => {
@@ -49,7 +52,20 @@ function OtpContainer({
     }
   }, [otpSent, setTimeLeft]);
 
-  const handleOtpVerification = () => {
+  const handleOtpVerification = async () => {
+    try {
+      const credential = auth.PhoneAuthProvider.credential(
+        confirm.verificationId,
+        code,
+      );
+      console.log(credential);
+      const userCredential = await auth().signInWithCredential(credential);
+      const user = userCredential.user;
+      console.log(user);
+      // Handle successful verification here
+    } catch (error) {
+      console.log(error);
+    }
     navigation.navigate('Main', {
       screen: 'Dashboard',
     });
@@ -74,7 +90,7 @@ function OtpContainer({
 
   const handleOtpChanged = (codes: number) => {
     console.log(codes);
-    setOtpCode(codes.toString());
+    onChangeCode(codes.toString());
     if (codes.toString().length !== OTP_COUNT) {
       setIsOtpFilled(false);
     }
