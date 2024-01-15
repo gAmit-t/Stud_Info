@@ -14,11 +14,15 @@ import {ParamListBase, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootParamList} from '../../common/interfaces';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import {getLocation} from '../../common/HelperFunctions';
 
 type OtpContainerProps = {
   otpSent: boolean;
   timeLeft: number;
   confirm: any;
+  deviceId: string;
+  fcmToken: string;
   setOtpSent: React.Dispatch<React.SetStateAction<boolean>>;
   setTimeLeft: React.Dispatch<React.SetStateAction<number>>;
 };
@@ -27,6 +31,8 @@ function OtpContainer({
   otpSent,
   timeLeft,
   confirm,
+  deviceId,
+  fcmToken,
   setOtpSent,
   setTimeLeft,
 }: OtpContainerProps) {
@@ -54,37 +60,56 @@ function OtpContainer({
   }, [otpSent, setTimeLeft]);
 
   const handleOtpVerification = async () => {
-    let user = auth().currentUser;
-    console.log(user);
+    const location = await getLocation();
     try {
       const credential = auth.PhoneAuthProvider.credential(
         confirm.verificationId,
         code,
       );
-      console.log(credential);
       const userCredential = await auth().signInWithCredential(credential);
       const user = userCredential.user;
-      console.log(user);
-      // Handle successful verification here
+      // Check if user exists in Firestore
+      const userDoc = await firestore().collection('Users').doc(user.uid).get();
+      console.log('Firebase UserDocs', userDoc);
+      if (userDoc.exists) {
+        // User exists, update user data
+        await firestore().collection('Users').doc(user.uid).update({
+          // Add fields you want to update here
+          lastLogin: Date.now(),
+          fcmToken: fcmToken,
+          deviceId: deviceId,
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        });
+        const userData = userDoc.data();
+        if (userData?.isRegistered) {
+          navigation.navigate('Main', {
+            screen: 'Dashboard',
+          });
+        } else {
+          navigation.navigate('Main', {
+            screen: 'Profile',
+          });
+        }
+      } else {
+        // User doesn't exist, create new user
+        await firestore().collection('Users').doc(user.uid).set({
+          uid: user.uid,
+          phoneNumber: user.phoneNumber,
+          fcmToken: fcmToken,
+          deviceId: deviceId,
+          isRegistered: false,
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          // Add other user fields here
+        });
+        navigation.navigate('Main', {
+          screen: 'Profile',
+        });
+      }
     } catch (error) {
       console.log(error);
     }
-    navigation.navigate('Main', {
-      screen: 'Dashboard',
-    });
-    //navigation.canGoBack();
-    // try {
-    //   await fetch('apiEndpoint', {
-    //     method: 'POST',
-    //     headers: {
-    //       Accept: 'application/json',
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({otp: otpCode}),
-    //   });
-    // } catch (error) {
-    //   console.error('Error:', error);
-    // }
   };
 
   function handleOtpFilled(code: number): void {
@@ -102,18 +127,6 @@ function OtpContainer({
   const handleOtpResend = async () => {
     console.log(otpSent);
     setOtpSent(true);
-    // try {
-    //     await fetch('apiEndpoint', {
-    //         method: 'POST',
-    //         headers: {
-    //             Accept: 'application/json',
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({ number }),
-    //     });
-    // } catch (error) {
-    //     console.error('Error:', error);
-    // }
   };
 
   return (
