@@ -6,10 +6,15 @@ import {
     useBlurOnFulfill,
     useClearByFocusCell,
   } from 'react-native-confirmation-code-field';
+import { OTP_COUNT } from '../../common/Constants';
+import {type IOtpContext, type IOtpInput} from './OtpInterface';
+
+  const CELL_COUNT = OTP_COUNT;
   
-  const CELL_COUNT = 6;
-  
- export const UnderlineExample = () => {
+ export const UnderlineExample = ({
+  onCodeChanged,
+
+ }: IOtpInput) => {
     const [value, setValue] = useState('');
     const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
     const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -28,6 +33,7 @@ import {
           rootStyle={styles.codeFieldRoot}
           keyboardType="number-pad"
           textContentType="oneTimeCode"
+          
           renderCell={({index, symbol, isFocused}) => (
             <View
               // Make sure that you pass onLayout={getCellOnLayoutHandler(index)} prop to root component of "Cell"

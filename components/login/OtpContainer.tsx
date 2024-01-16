@@ -17,7 +17,8 @@ import { RootParamList } from '../../common/interfaces';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { getLocation } from '../../common/HelperFunctions';
-import UnderLineOtp from './underline_otp';
+import UnderLineOtp from './OtpUnderline';
+import Snackbar from 'react-native-snackbar';
 
 
 
@@ -64,58 +65,66 @@ function OtpContainer({
   }, [otpSent, setTimeLeft]);
 
   const handleOtpVerification = async () => {
-    const location = await getLocation();
-    try {
-      const credential = auth.PhoneAuthProvider.credential(
-        confirm.verificationId,
-        code,
-      );
-      const userCredential = await auth().signInWithCredential(credential);
-      const user = userCredential.user;
+    console.log(code.length);
+    if (code.length == 6) {
+      const location = await getLocation();
+      try {
+        const credential = auth.PhoneAuthProvider.credential(
+          confirm.verificationId,
+          code,
+        );
+        const userCredential = await auth().signInWithCredential(credential);
+        const user = userCredential.user;
+        // Check if user exists in Firestore
+        const userDoc = await firestore().collection('Users').doc(user.uid).get();
 
-      const userDoc = await firestore().collection('Users').doc(user.uid).get();
-
-      if (userDoc.exists) {
-        // User exists, update user data
-        await firestore().collection('Users').doc(user.uid).update({
-          // Add fields you want to update here
-          lastLogin: Date.now(),
-          fcmToken: fcmToken,
-          deviceId: deviceId,
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        });
-        const userData = userDoc.data();
-
-        if (userData?.isRegistered) {
-          navigation.navigate('Main', {
-            screen: 'Dashboard',
+        if (userDoc.exists) {
+          // User exists, update user data
+          await firestore().collection('Users').doc(user.uid).update({
+            // Add fields you want to update here
+            lastLogin: Date.now(),
+            fcmToken: fcmToken,
+            deviceId: deviceId,
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
           });
+          const userData = userDoc.data();
+
+          if (userData?.isRegistered) {
+            navigation.navigate('Main', {
+              screen: 'Dashboard',
+            });
+          } else {
+            navigation.navigate('Main', {
+              screen: 'View Profile',
+            });
+          }
         } else {
+          // User doesn't exist, create new user
+          await firestore().collection('Users').doc(user.uid).set({
+            uid: user.uid,
+            phoneNumber: user.phoneNumber,
+            fcmToken: fcmToken,
+            deviceId: deviceId,
+            isRegistered: false,
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            courses: [],
+            notifications: [],
+            // Add other user fields here
+          });
           navigation.navigate('Main', {
             screen: 'View Profile',
           });
         }
-      } else {
-        // User doesn't exist, create new user
-        await firestore().collection('Users').doc(user.uid).set({
-          uid: user.uid,
-          phoneNumber: user.phoneNumber,
-          fcmToken: fcmToken,
-          deviceId: deviceId,
-          isRegistered: false,
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-          courses: [],
-          notifications: [],
-          // Add other user fields here
-        });
-        navigation.navigate('Main', {
-          screen: 'View Profile',
-        });
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
+    } else {
+      Snackbar.show({
+        text: "Enter 6 digit code",
+
+      });
     }
   };
 
@@ -140,10 +149,10 @@ function OtpContainer({
     <SafeAreaView style={styles.container}>
       {/* <Text>Enter Otp</Text> */}
       <UnderLineOtp
-      // otpCount={OTP_COUNT}
+      otpCount={OTP_COUNT}
       // autoFocus={false}
       // onCodeFilled={handleOtpFilled}
-      // onCodeChanged={handleOtpChanged}
+      onCodeChanged={handleOtpChanged}
       />
       {otpSent ? (
         <Text onPress={handleOtpResend}>
@@ -151,7 +160,7 @@ function OtpContainer({
           seconds
         </Text>
       ) : null}
-      <TouchableOpacity style={styles.button} disabled={!isOtpFilled} onPress={handleOtpVerification}>
+      <TouchableOpacity style={styles.button} onPress={handleOtpVerification}>
         <Text style={styles.buttonText}>Verify OTP</Text>
       </TouchableOpacity>
 
