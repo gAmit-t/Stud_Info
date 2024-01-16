@@ -6,27 +6,43 @@ import {DrawerNavigationProp} from '@react-navigation/drawer';
 import HeaderComponent from '../shared/header';
 import FooterComponent from '../shared/footer';
 import NotificationCard from './NotificationCard';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
 type NavigationProp = DrawerNavigationProp<DrawerParamList>;
 
 const Notifications = () => {
   const navigation = useNavigation<NavigationProp>();
-  const [notifications, setNotifications] = useState<INotificationCardItem[]>([
-    {
-      id: '1',
-      title: 'Title 1',
-      timestamp: 'Timestamp 1',
-      message: 'Message 1',
-      isClosed: false,
-    },
-    {
-      id: '2',
-      title: 'Title 2',
-      timestamp: 'Timestamp 2',
-      message: 'Message 2',
-      isClosed: false,
-    },
-  ]);
+  const [notifications, setNotifications] = useState<INotificationCardItem[]>(
+    [],
+  );
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      const userId = auth().currentUser?.uid || '';
+      console.log(userId);
+      if (!userId) return;
+
+      try {
+        const notificationsCollection = firestore().collection('Notifications');
+        console.log('NotificationCollection: ', notificationsCollection);
+        const querySnapshot = await notificationsCollection
+          .where('userId', '==', userId)
+          .get();
+
+        const notificationsData = querySnapshot.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id,
+        })) as INotificationCardItem[];
+
+        setNotifications(notificationsData);
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
 
   const handleClose = (id: string) => {
     setNotifications(prevNotifications =>
