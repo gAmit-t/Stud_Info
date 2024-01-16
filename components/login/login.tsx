@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Button,
@@ -7,17 +7,19 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
   useColorScheme,
 } from 'react-native';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {viewheight, viewwidth} from '../../common/HelperFunctions';
-import {RE_DIGIT} from '../../common/Constants';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { viewheight, viewwidth } from '../../common/HelperFunctions';
+import { RE_DIGIT } from '../../common/Constants';
 import OtpContainer from './OtpContainer';
-import {PermissionsAndroid} from 'react-native';
+import { PermissionsAndroid } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import DeviceInfo from 'react-native-device-info';
 import auth from '@react-native-firebase/auth';
+import Snackbar from 'react-native-snackbar';
 
 //Permission request for sending message on android
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
@@ -68,7 +70,10 @@ function Login(): React.JSX.Element {
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={{flexGrow: 1}}>
+    
+    <ScrollView  contentContainerStyle={{
+      flexGrow: 1, backgroundColor: 'white', flex: 1,
+    }}>
       <SplashImage></SplashImage>
       <MobileNumberTextInput
         setOtpSent={setOtpSent}
@@ -102,7 +107,8 @@ function SplashImage(): React.JSX.Element {
         style={{
           height: viewheight(20),
           width: viewwidth(60),
-          margin: 80,
+          marginTop: 80,
+          marginBottom: 15,
           resizeMode: 'contain',
         }}
         source={require('../../assets/logo.png')}
@@ -128,24 +134,36 @@ function MobileNumberTextInput({
   };
 
   const handleSubmit = async () => {
-    setLoading(true);
-    // Send a verification code to the user's mobile number
-    try {
-      const confirmation = await auth().signInWithPhoneNumber(
-        '+91' + number.toString(),
-      );
-      setConfirm(confirmation);
-      setOtpSent(true);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+    if (number.length == 10) {
+      setLoading(true);
+      try {
+        const confirmation = await auth().signInWithPhoneNumber(
+          '+91' + number.toString(),
+        );
+        setConfirm(confirmation);
+        setOtpSent(true);
+      } catch (error) {
+        Snackbar.show({
+          text: "Something went wrong",
+
+        });
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      Snackbar.show({
+        text: 'Enter valid number',
+
+      });
     }
   };
   // Return the JSX component
   return (
     <View style={styles.container}>
-      <Text style={styles.txt}>Sign In</Text>
+      <Text style={styles.txt}>Education</Text>
+      <Text style={styles.subtitle}>Student App</Text>
+      <Text style={styles.centerLeftText}>Mobile Number</Text>
+
       <TextInput
         style={styles.txtinput}
         onChangeText={text => onChangeNumber(restrictNumericInput(text))}
@@ -153,11 +171,11 @@ function MobileNumberTextInput({
         placeholder="Enter Mobile Number"
         keyboardType="numeric"
         maxLength={10}></TextInput>
-      <Button
-        title="Get Otp"
-        onPress={handleSubmit}
-        disabled={number.length !== 10}></Button>
-      {loading && <ActivityIndicator size="large" color="#0000ff" />}
+      {!loading && <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Get OTP</Text>
+      </TouchableOpacity>}
+
+      {loading && <ActivityIndicator style={{marginTop: 20}} size="large" color="#8FBC8F" />}
       {otpSent && (
         <Text style={styles.txtOtp}>
           OTP has been sent on your mobile number
@@ -168,27 +186,60 @@ function MobileNumberTextInput({
 }
 
 const styles = StyleSheet.create({
+  button: {
+    marginTop: 20,
+    paddingHorizontal: 35,
+    backgroundColor: '#D3D3D3',
+    padding: 8,
+    borderRadius: 5, // Rounded corners
+  },
+  buttonText: {
+    color: '#404040', // Text color
+    fontSize: 18,
+  },
   container: {
+
     alignItems: 'center',
     justifyContent: 'center',
     fontFamily: 'sans-serif',
     fontWeight: 'bold',
+    backgroundColor: 'white'
   },
   txt: {
     fontWeight: 'bold',
     alignSelf: 'center',
+    fontSize: 28,
+    letterSpacing: 1,
+    color: 'black'
+  },
+  subtitle: {
+    fontSize: 17,
+    letterSpacing: 1,
+    color: 'grey',
+    marginLeft: 10
   },
   txtOtp: {
     fontWeight: 'normal',
     alignSelf: 'center',
+    marginTop:10
   },
   txtinput: {
-    fontWeight: 'normal',
-    flexWrap: 'nowrap',
-    alignSelf: 'center',
-    paddingLeft: 4,
-    textAlign: 'center',
-    justifyContent: 'space-evenly',
+    width: viewwidth(85),
+    height: 46,
+    borderWidth: 0.8,
+    borderColor: 'gray',
+    paddingLeft: 10,
+    paddingRight: 10,
+    marginTop: 10,
+    borderRadius: 5,
+  },
+
+  centerLeftText: {
+    marginTop: 30,
+    alignSelf: 'flex-start',
+    fontSize: 16,
+    marginLeft: 30,
+    color: 'grey'
   },
 });
 
