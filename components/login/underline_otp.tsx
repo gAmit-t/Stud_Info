@@ -7,7 +7,7 @@ import {
     useClearByFocusCell,
   } from 'react-native-confirmation-code-field';
   
-  const CELL_COUNT = 4;
+  const CELL_COUNT = 6;
   
  export const UnderlineExample = () => {
     const [value, setValue] = useState('');
@@ -54,7 +54,7 @@ import {
       marginRight: 'auto',
     },
     cellRoot: {
-      width: 60,
+      width: "15%",
       height: 60,
       justifyContent: 'center',
       alignItems: 'center',
