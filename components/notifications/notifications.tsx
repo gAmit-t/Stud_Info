@@ -28,15 +28,6 @@ const Notifications = () => {
     },
   ]);
 
-  //  useEffect(() => {
-  //  fetch('https://api.example.com/notifications')
-  //    .then(response => response.json())
-  //    .then((data: INotificationCardItem[]) => {
-  //      setNotifications(data);
-  //    })
-  //    .catch(error => console.error(`Error fetching notifications: ${error}`));
-  //  }, []);
-
   const handleClose = (id: string) => {
     setNotifications(prevNotifications =>
       prevNotifications.map(notification =>

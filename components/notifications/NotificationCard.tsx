@@ -3,7 +3,7 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {INotificationCardItem} from '../../common/interfaces';
 
 interface NotificationCardProps extends INotificationCardItem {
-  onClose: () => void;
+  onClose: (id: string) => void;
 }
 
 const NotificationCard = ({
@@ -15,12 +15,12 @@ const NotificationCard = ({
   onClose,
 }: NotificationCardProps) => (
   <View style={styles.card}>
-    <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-      <Text style={styles.closeIcon}>X</Text>
-    </TouchableOpacity>
     <Text style={styles.header}>{title}</Text>
     <Text style={styles.timestamp}>{timestamp}</Text>
     <Text style={styles.message}>{message}</Text>
+    <TouchableOpacity style={styles.closeButton} onPress={() => onClose(id)}>
+      <Text style={styles.closeIcon}>X</Text>
+    </TouchableOpacity>
   </View>
 );
 

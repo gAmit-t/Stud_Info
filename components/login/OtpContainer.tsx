@@ -70,7 +70,7 @@ function OtpContainer({
       const user = userCredential.user;
       // Check if user exists in Firestore
       const userDoc = await firestore().collection('Users').doc(user.uid).get();
-      console.log('Firebase UserDocs', userDoc);
+
       if (userDoc.exists) {
         // User exists, update user data
         await firestore().collection('Users').doc(user.uid).update({
@@ -82,13 +82,14 @@ function OtpContainer({
           longitude: location.coords.longitude,
         });
         const userData = userDoc.data();
+
         if (userData?.isRegistered) {
           navigation.navigate('Main', {
             screen: 'Dashboard',
           });
         } else {
           navigation.navigate('Main', {
-            screen: 'Profile',
+            screen: 'View Profile',
           });
         }
       } else {
@@ -101,10 +102,11 @@ function OtpContainer({
           isRegistered: false,
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
+          courses: [],
           // Add other user fields here
         });
         navigation.navigate('Main', {
-          screen: 'Profile',
+          screen: 'View Profile',
         });
       }
     } catch (error) {
