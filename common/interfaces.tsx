@@ -15,7 +15,8 @@ export interface DrawerParamList extends ParamListBase {
 export interface INotificationCardItem {
   id: string;
   title: string;
-  timestamp: string;
+  timestamp: Date;
   message: string;
   isClosed: boolean;
+  isRead: boolean;
 }

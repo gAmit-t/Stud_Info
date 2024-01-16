@@ -1,9 +1,11 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {INotificationCardItem} from '../../common/interfaces';
+import moment from 'moment';
 
 interface NotificationCardProps extends INotificationCardItem {
   onClose: (id: string) => void;
+  isRead: boolean;
 }
 
 const NotificationCard = ({
@@ -12,24 +14,28 @@ const NotificationCard = ({
   timestamp,
   message,
   isClosed,
+  isRead,
   onClose,
-}: NotificationCardProps) => (
-  <View style={styles.card}>
-    <Text style={styles.header}>{title}</Text>
-    <Text style={styles.timestamp}>{timestamp}</Text>
-    <Text style={styles.message}>{message}</Text>
-    <TouchableOpacity style={styles.closeButton} onPress={() => onClose(id)}>
-      <Text style={styles.closeIcon}>X</Text>
-    </TouchableOpacity>
-  </View>
-);
+}: NotificationCardProps) => {
+  const formattedTimestamp = moment(timestamp).format('hh:mm A | DD/MM');
+
+  return (
+    <View style={[styles.card, isRead ? styles.readCard : styles.unreadCard]}>
+      <Text style={styles.header}>{title}</Text>
+      <Text style={styles.timestamp}>{formattedTimestamp}</Text>
+      <Text style={styles.message}>{message}</Text>
+      <TouchableOpacity style={styles.closeButton} onPress={() => onClose(id)}>
+        <Text style={styles.closeIcon}>X</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   card: {
     width: '100%',
     padding: 10,
     marginVertical: 5,
-    backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -40,6 +46,12 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderRadius: 5,
     position: 'relative',
+  },
+  readCard: {
+    backgroundColor: '#f5f5f5',
+  },
+  unreadCard: {
+    backgroundColor: 'red',
   },
   header: {
     fontSize: 20,
