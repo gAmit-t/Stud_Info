@@ -38,9 +38,6 @@ function Login(): React.JSX.Element {
   const [confirm, setConfirm] = useState<object | null>(null);
 
   const isDarkMode = useColorScheme() === 'dark';
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
 
   //Hook to capture DeviceId
   useEffect(() => {

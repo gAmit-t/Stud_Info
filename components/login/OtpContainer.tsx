@@ -68,7 +68,7 @@ function OtpContainer({
       );
       const userCredential = await auth().signInWithCredential(credential);
       const user = userCredential.user;
-      // Check if user exists in Firestore
+
       const userDoc = await firestore().collection('Users').doc(user.uid).get();
 
       if (userDoc.exists) {
