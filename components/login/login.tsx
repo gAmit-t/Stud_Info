@@ -142,7 +142,7 @@ function MobileNumberTextInput({
       setLoading(false);
     }
   };
-
+  // Return the JSX component
   return (
     <View style={styles.container}>
       <Text style={styles.txt}>Sign In</Text>

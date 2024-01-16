@@ -47,11 +47,6 @@ const Profile = () => {
   };
 
   const handleRegistration = () => {
-    //    if (!StudName || !RollNo || !DOB || !Gender || !Stud_address || !States || !city || !email) {
-    //   console.error('All fields are required.');
-    //   return;
-    // }
-    // Prepare the registration data as a JSON string
     const registrationData = JSON.stringify({
       StudName,
       RollNo,
@@ -63,29 +58,6 @@ const Profile = () => {
       email,
     });
     console.log(registrationData);
-
-    // Make a POST request to your API
-    fetch('http://agdisk.com/oldV/api/Student/ResgiterStudent', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: registrationData,
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        // Handle the API response data
-        console.log('API Response:', data);
-      })
-      .catch(error => {
-        // Handle errors
-        console.error('Error:', error);
-      });
   };
 
   const handleDateChange = (event: any, selectedDate: any) => {
@@ -204,11 +176,11 @@ const Profile = () => {
   );
 };
 
-const styles = StyleSheet.create({ 
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20, 
-    paddingTop: 20, 
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   contentContainer: {
     marginTop: 10,

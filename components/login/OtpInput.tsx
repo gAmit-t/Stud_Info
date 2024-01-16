@@ -47,7 +47,6 @@ const OtpItem = ({i}: {i: number}) => {
     editable,
     enteringAnimated,
     exitingAnimated,
-    rest,
   } = useContext(OtpContext);
 
   const border = useSharedValue(focus === i ? 1.5 : 0);

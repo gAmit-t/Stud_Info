@@ -104,7 +104,6 @@ function OtpContainer({
           longitude: location.coords.longitude,
           courses: [],
           notifications: [],
-          // Add other user fields here
         });
         navigation.navigate('Main', {
           screen: 'View Profile',
