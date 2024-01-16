@@ -5,17 +5,21 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import OtpInput from './OtpInput';
-import React, {useEffect, useState} from 'react';
-import {OTP_COUNT} from '../../common/Constants';
-import {ParamListBase, useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootParamList} from '../../common/interfaces';
+import React, { useEffect, useState } from 'react';
+import { OTP_COUNT } from '../../common/Constants';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootParamList } from '../../common/interfaces';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import {getLocation} from '../../common/HelperFunctions';
+import { getLocation } from '../../common/HelperFunctions';
+import UnderLineOtp from './underline_otp';
+
+
 
 type OtpContainerProps = {
   otpSent: boolean;
@@ -134,36 +138,34 @@ function OtpContainer({
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
-        {/* <Text>Enter Otp</Text> */}
-        <OtpInput
-          otpCount={OTP_COUNT}
-          autoFocus={false}
-          onCodeFilled={handleOtpFilled}
-          onCodeChanged={handleOtpChanged}
-        />
-        {otpSent ? (
-          <Text onPress={handleOtpResend}>
-            <Text style={styles.txtRsend}>Resend OTP</Text> in {timeLeft}{' '}
-            seconds
-          </Text>
-        ) : null}
-        <Button
-          title="Verify OTP"
-          onPress={handleOtpVerification}
-          disabled={!isOtpFilled}
-        />
-      </ScrollView>
+      {/* <Text>Enter Otp</Text> */}
+      <UnderLineOtp
+      // otpCount={OTP_COUNT}
+      // autoFocus={false}
+      // onCodeFilled={handleOtpFilled}
+      // onCodeChanged={handleOtpChanged}
+      />
+      {otpSent ? (
+        <Text onPress={handleOtpResend}>
+          <Text style={styles.txtRsend}>Resend OTP</Text> in {timeLeft}{' '}
+          seconds
+        </Text>
+      ) : null}
+      <TouchableOpacity style={styles.button} disabled={!isOtpFilled} onPress={handleOtpVerification}>
+        <Text style={styles.buttonText}>Verify OTP</Text>
+      </TouchableOpacity>
+
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    width: 'auto',
+    justifyContent: 'center',
+    fontFamily: 'sans-serif',
+    fontWeight: 'bold',
+    backgroundColor: 'white'
   },
   title: {
     fontSize: 24,
@@ -171,6 +173,21 @@ const styles = StyleSheet.create({
   },
   txtRsend: {
     color: 'blue',
+    flex: 1,
+    textAlign: "center",
+    alignSelf: "center"
+  },
+  button: {
+    marginTop: 20,
+    width: 250,
+    alignItems: "center",
+    backgroundColor: '#70dcbc',
+    padding: 8,
+    borderRadius: 5, // Rounded corners
+  },
+  buttonText: {
+    color: 'black', // Text color
+    fontSize: 18,
   },
 });
 
