@@ -149,7 +149,6 @@ export const OtpInput = ({
 
   const onFocusNext = (value: string, index: number) => {
     if (!RE_DIGIT.test(value)) {
-      // If the input is not a number, ignore it
       return;
     }
     if (index < otpCount - 1 && value) {

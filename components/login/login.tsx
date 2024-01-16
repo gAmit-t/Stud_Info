@@ -19,7 +19,6 @@ import messaging from '@react-native-firebase/messaging';
 import DeviceInfo from 'react-native-device-info';
 import auth from '@react-native-firebase/auth';
 
-//Permission request for sending message on android
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
 

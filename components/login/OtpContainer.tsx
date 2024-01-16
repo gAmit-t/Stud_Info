@@ -68,13 +68,10 @@ function OtpContainer({
       );
       const userCredential = await auth().signInWithCredential(credential);
       const user = userCredential.user;
-      // Check if user exists in Firestore
       const userDoc = await firestore().collection('Users').doc(user.uid).get();
 
       if (userDoc.exists) {
-        // User exists, update user data
         await firestore().collection('Users').doc(user.uid).update({
-          // Add fields you want to update here
           lastLogin: Date.now(),
           fcmToken: fcmToken,
           deviceId: deviceId,
