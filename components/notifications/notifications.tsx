@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
-import Badge, {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import {DrawerParamList, INotificationCardItem} from '../../common/interfaces';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import HeaderComponent from '../shared/header';
