@@ -4,6 +4,7 @@ import {ParamListBase} from '@react-navigation/native';
 export interface RootParamList extends ParamListBase {
   Login: undefined;
   Dashboard: undefined;
+  RegisterUser: {fcmToken: string};
 }
 
 // Drawer Param Interface

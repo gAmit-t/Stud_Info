@@ -88,9 +88,7 @@ function OtpContainer({
             screen: 'Dashboard',
           });
         } else {
-          navigation.navigate('Main', {
-            screen: 'View Profile',
-          });
+          navigation.navigate('RegisterUser', {fcmToken: fcmToken});
         }
       } else {
         // User doesn't exist, create new user
@@ -105,9 +103,7 @@ function OtpContainer({
           courses: [],
           notifications: [],
         });
-        navigation.navigate('Main', {
-          screen: 'View Profile',
-        });
+        navigation.navigate('RegisterUser', {fcmToken: fcmToken});
       }
     } catch (error) {
       console.log(error);
