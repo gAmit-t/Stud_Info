@@ -2,7 +2,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {RouteProp} from '@react-navigation/native';
 import {Picker} from '@react-native-picker/picker';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import messaging, {
@@ -24,11 +24,8 @@ import {RE_DIGIT} from '../../common/Constants';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
-type NavigationProp = DrawerNavigationProp<DrawerParamList>;
-type RegisterUserScreenRouteProp = RouteProp<RootParamList, 'RegisterUser'>;
-
-const RegisterUser = ({route}: {route: RegisterUserScreenRouteProp}) => {
-  const {fcmToken} = route.params;
+const RegisterUser = () => {
+  const [fcmToken, setFCMToken] = useState('');
   const [firstName, setfirstName] = useState('');
   const [lastName, setlastName] = useState('');
   const [rollNo, setRollNo] = useState('');
@@ -41,6 +38,19 @@ const RegisterUser = ({route}: {route: RegisterUserScreenRouteProp}) => {
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [email, setEmail] = useState('');
+
+  const getFCMToken = async () => {
+    try {
+      const token = await messaging().getToken();
+      setFCMToken(token);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    getFCMToken();
+  }, []);
 
   const navigation = useNavigation<StackNavigationProp<RootParamList>>();
 

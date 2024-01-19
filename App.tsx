@@ -1,16 +1,15 @@
 import React, {useEffect} from 'react';
-import {
-  Alert,
-  Button,
-  StyleSheet,
-  Text,
-  View,
-  useColorScheme,
-} from 'react-native';
+import {Alert, StyleSheet, useColorScheme} from 'react-native';
 
+import firebase from '@react-native-firebase/app';
+import auth from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import {
+  CommonActions,
+  NavigationContainer,
+  useNavigation,
+} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
@@ -19,13 +18,8 @@ import Dashboard from './components/dashboard/dashboard';
 import Login from './components/login/login';
 import Notifications from './components/notifications/notifications';
 import Profile from './components/profile/profile';
-import firebase from '@react-native-firebase/app';
-import firebaseConfig from './firebaseConfig';
-import firestore from '@react-native-firebase/firestore';
-import {createStackNavigator} from '@react-navigation/stack';
-import {CommonActions} from '@react-navigation/native';
-import auth from '@react-native-firebase/auth';
 import RegisterUser from './components/profile/registerUser';
+import firebaseConfig from './firebaseConfig';
 
 const Drawer = createDrawerNavigator();
 if (!firebase.apps.length) {
@@ -63,7 +57,7 @@ const MainStack = () => {
       />
       <Drawer.Screen
         name="View Profile"
-        component={Profile}
+        component={RegisterUser}
         options={{headerShown: false}}
       />
       <Drawer.Screen
