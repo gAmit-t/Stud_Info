@@ -7,17 +7,19 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
   useColorScheme,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {viewheight, viewwidth} from '../../common/HelperFunctions';
-import {RE_DIGIT} from '../../common/Constants';
+import {RE_DIGIT, tealColor} from '../../common/Constants';
 import OtpContainer from './OtpContainer';
 import {PermissionsAndroid} from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import DeviceInfo from 'react-native-device-info';
 import auth from '@react-native-firebase/auth';
+import FadeInView from '../../common/animations';
 
 //Permission request for sending message on android
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
@@ -71,8 +73,26 @@ function Login(): React.JSX.Element {
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={{flexGrow: 1}}>
+    <ScrollView
+      contentContainerStyle={{
+        flexGrow: 1,
+        backgroundColor: backgroundStyle.backgroundColor,
+      }}>
       <SplashImage></SplashImage>
+      <Text
+        style={[
+          styles.educationTxt,
+          {backgroundColor: backgroundStyle.backgroundColor},
+        ]}>
+        EDUCATION
+      </Text>
+      <Text
+        style={[
+          styles.studentAppTxt,
+          {backgroundColor: backgroundStyle.backgroundColor},
+        ]}>
+        Student App
+      </Text>
       <MobileNumberTextInput
         setOtpSent={setOtpSent}
         setConfirm={setConfirm}
@@ -97,7 +117,7 @@ function SplashImage(): React.JSX.Element {
   return (
     <View
       style={{
-        backgroundColor: isDarkMode ? Colors.black : Colors.white,
+        backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
         justifyContent: 'center',
         alignItems: 'center',
       }}>
@@ -105,7 +125,8 @@ function SplashImage(): React.JSX.Element {
         style={{
           height: viewheight(20),
           width: viewwidth(60),
-          margin: 80,
+          margin: 70,
+          marginBottom: 15,
           resizeMode: 'contain',
         }}
         source={require('../../assets/logo.png')}
@@ -121,6 +142,12 @@ function MobileNumberTextInput({
 }: MobileNumberTextInputProps): React.JSX.Element {
   const [number, onChangeNumber] = React.useState('');
   const [loading, setLoading] = useState(false);
+
+  const isDarkMode = useColorScheme() === 'dark';
+  const backgroundStyle = {
+    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    color: isDarkMode ? Colors.lighter : Colors.darker,
+  };
 
   const restrictNumericInput = (text: string) => {
     if (!RE_DIGIT.test(text)) {
@@ -147,8 +174,12 @@ function MobileNumberTextInput({
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.txt}>Sign In</Text>
+    <View
+      style={[
+        styles.container,
+        {backgroundColor: backgroundStyle.backgroundColor},
+      ]}>
+      <Text style={styles.txt}>Mobile Number</Text>
       <TextInput
         style={styles.txtinput}
         onChangeText={text => onChangeNumber(restrictNumericInput(text))}
@@ -156,15 +187,33 @@ function MobileNumberTextInput({
         placeholder="Enter Mobile Number"
         keyboardType="numeric"
         maxLength={10}></TextInput>
-      <Button
-        title="Get Otp"
-        onPress={handleSubmit}
-        disabled={number.length !== 10}></Button>
-      {loading && <ActivityIndicator size="large" color="#0000ff" />}
+      {loading ? (
+        <ActivityIndicator
+          style={{marginTop: 20}}
+          size="large"
+          color={tealColor}
+        />
+      ) : (
+        <TouchableOpacity style={styles.button}>
+          <View>
+            <Text onPress={handleSubmit} style={styles.buttonText}>
+              Get OTP
+            </Text>
+          </View>
+        </TouchableOpacity>
+      )}
       {otpSent && (
-        <Text style={styles.txtOtp}>
-          OTP has been sent on your mobile number
-        </Text>
+        <FadeInView>
+          <Text
+            style={{
+              alignSelf: 'center',
+              color: 'grey',
+              fontSize: 16,
+              marginTop: 10,
+            }}>
+            OTP has been sent on your mobile number
+          </Text>
+        </FadeInView>
       )}
     </View>
   );
@@ -172,26 +221,53 @@ function MobileNumberTextInput({
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
     fontFamily: 'sans-serif',
     fontWeight: 'bold',
+    paddingHorizontal: 20,
   },
   txt: {
-    fontWeight: 'bold',
-    alignSelf: 'center',
+    letterSpacing: 1,
+    fontSize: 15,
+    color: 'grey',
   },
   txtOtp: {
     fontWeight: 'normal',
     alignSelf: 'center',
   },
   txtinput: {
-    fontWeight: 'normal',
-    flexWrap: 'nowrap',
+    color: 'black',
+    marginTop: 5,
+    height: viewheight(5.5),
+    borderColor: '#ccc',
+    borderWidth: 1.6,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+  },
+  button: {
+    marginTop: 20,
     alignSelf: 'center',
-    paddingLeft: 4,
-    textAlign: 'center',
-    justifyContent: 'space-evenly',
+    paddingHorizontal: 30,
+    backgroundColor: '#D3D3D3',
+    padding: 8,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: '#333',
+    fontSize: 17,
+  },
+  educationTxt: {
+    fontWeight: '800',
+    alignSelf: 'center',
+    letterSpacing: 1,
+    fontSize: 23,
+  },
+  studentAppTxt: {
+    alignSelf: 'center',
+    fontSize: 18,
+    paddingTop: 5,
+    paddingLeft: 20,
   },
 });
 

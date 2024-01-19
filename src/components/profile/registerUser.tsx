@@ -23,6 +23,8 @@ import {DrawerParamList, RootParamList} from '../../common/interfaces';
 import {RE_DIGIT} from '../../common/Constants';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import HeaderComponent from '../shared/header';
+import FooterComponent from '../shared/footer';
 
 const RegisterUser = () => {
   const [fcmToken, setFCMToken] = useState('');
@@ -168,6 +170,7 @@ const RegisterUser = () => {
       <KeyboardAvoidingView behavior="padding">
         <ScrollView>
           <View style={styles.container}>
+            <HeaderComponent></HeaderComponent>
             <View style={styles.contentContainer}>
               <Text style={styles.labeltop}>Register User</Text>
               <View style={styles.contentContainerp}>
@@ -281,6 +284,7 @@ const RegisterUser = () => {
                 </TouchableOpacity>
               </View>
             </View>
+            <FooterComponent></FooterComponent>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

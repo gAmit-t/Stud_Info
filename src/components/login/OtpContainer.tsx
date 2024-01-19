@@ -1,21 +1,24 @@
 import {
+  ActivityIndicator,
   Alert,
   Button,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import OtpInput from './OtpInput';
 import React, {useEffect, useState} from 'react';
-import {OTP_COUNT} from '../../common/Constants';
+import {OTP_COUNT, tealColor} from '../../common/Constants';
 import {ParamListBase, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootParamList} from '../../common/interfaces';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {getLocation} from '../../common/HelperFunctions';
+import {Colors} from 'react-native-elements';
 
 type OtpContainerProps = {
   otpSent: boolean;
@@ -38,6 +41,7 @@ function OtpContainer({
 }: OtpContainerProps) {
   const [isOtpFilled, setIsOtpFilled] = React.useState(false);
   const [code, onChangeCode] = useState('');
+  const [isVerifying, setisVerifying] = useState(false);
 
   const navigation = useNavigation<StackNavigationProp<RootParamList>>();
   useEffect(() => {
@@ -60,6 +64,7 @@ function OtpContainer({
   }, [otpSent, setTimeLeft]);
 
   const handleOtpVerification = async () => {
+    setisVerifying(true);
     const location = await getLocation();
     try {
       const credential = auth.PhoneAuthProvider.credential(
@@ -84,10 +89,16 @@ function OtpContainer({
         const userData = userDoc.data();
 
         if (userData?.isRegistered) {
-          navigation.navigate('Main', {
-            screen: 'Dashboard',
+          setisVerifying(false);
+          // navigation.navigate('Main', {
+          //   screen: 'Dashboard',
+          // });
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'Main'}],
           });
         } else {
+          setisVerifying(false);
           navigation.navigate('RegisterUser');
         }
       } else {
@@ -103,6 +114,7 @@ function OtpContainer({
           courses: [],
           notifications: [],
         });
+        setisVerifying(false);
         navigation.navigate('RegisterUser');
       }
     } catch (error) {
@@ -143,11 +155,26 @@ function OtpContainer({
             seconds
           </Text>
         ) : null}
-        <Button
+        {/* <Button
           title="Verify OTP"
           onPress={handleOtpVerification}
           disabled={!isOtpFilled}
-        />
+        /> */}
+        {isVerifying ? (
+          <ActivityIndicator
+            style={{marginTop: 20}}
+            size="large"
+            color={tealColor}
+          />
+        ) : (
+          <TouchableOpacity
+            onPress={handleOtpVerification}
+            style={styles.continueBtn}>
+            <View>
+              <Text style={{color: 'white', fontSize: 17}}>Continue</Text>
+            </View>
+          </TouchableOpacity>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -165,7 +192,18 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   txtRsend: {
-    color: 'blue',
+    marginTop: '5%',
+    alignSelf: 'center',
+    color: '#4169E1',
+    fontSize: 17,
+  },
+  continueBtn: {
+    marginTop: 20,
+    alignSelf: 'center',
+    paddingHorizontal: '20%',
+    backgroundColor: '#008080',
+    padding: 8,
+    borderRadius: 5,
   },
 });
 
