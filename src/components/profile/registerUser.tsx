@@ -82,7 +82,7 @@ const RegisterUser = () => {
         firstName: firstName,
         lastName: lastName,
         rollNo: rollNo,
-        dob: dob,
+        dob: dobTimestamp,
         gender: gender,
         address1: address1,
         address2: address2,
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     height: 50,
   },
 

@@ -134,14 +134,11 @@ function OtpContainer({
     }
   };
 
-  const handleOtpResend = async () => {
-    console.log(otpSent);
-    setOtpSent(true);
-  };
+  const handleOtpResend = async () => {};
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+      <ScrollView>
         {/* <Text>Enter Otp</Text> */}
         <OtpInput
           otpCount={OTP_COUNT}
@@ -149,17 +146,18 @@ function OtpContainer({
           onCodeFilled={handleOtpFilled}
           onCodeChanged={handleOtpChanged}
         />
-        {otpSent ? (
-          <Text onPress={handleOtpResend}>
-            <Text style={styles.txtRsend}>Resend OTP</Text> in {timeLeft}{' '}
-            seconds
-          </Text>
-        ) : null}
-        {/* <Button
-          title="Verify OTP"
-          onPress={handleOtpVerification}
-          disabled={!isOtpFilled}
-        /> */}
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          {otpSent ? (
+            <Text
+              style={{justifyContent: 'center', alignItems: 'center'}}
+              onPress={handleOtpResend}>
+              <Text style={styles.txtRsend}>Resend OTP</Text>{' '}
+              {timeLeft ? (
+                <Text style={{color: 'black'}}>in {timeLeft} seconds</Text>
+              ) : null}
+            </Text>
+          ) : null}
+        </View>
         {isVerifying ? (
           <ActivityIndicator
             style={{marginTop: 20}}
@@ -193,7 +191,6 @@ const styles = StyleSheet.create({
   },
   txtRsend: {
     marginTop: '5%',
-    alignSelf: 'center',
     color: '#4169E1',
     fontSize: 17,
   },

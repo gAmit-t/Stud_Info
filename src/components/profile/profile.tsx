@@ -1,72 +1,139 @@
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import messaging from '@react-native-firebase/messaging';
+import {Picker} from '@react-native-picker/picker';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import {StackNavigationProp} from '@react-navigation/stack';
+import React, {useEffect, useState} from 'react';
 import {
-  View,
-  Text,
   Image,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
   KeyboardAvoidingView,
   ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import {DrawerParamList} from '../../common/interfaces';
-import {DrawerNavigationProp} from '@react-navigation/drawer';
-import HeaderComponent from '../shared/header';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import Snackbar from 'react-native-snackbar';
+import {RE_DIGIT} from '../../common/Constants';
+import {DrawerParamList, RootParamList} from '../../common/interfaces';
 import FooterComponent from '../shared/footer';
-import {Picker} from '@react-native-picker/picker';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import {viewheight} from '../../common/HelperFunctions';
-import {scrollTo} from 'react-native-reanimated';
-
-//Om ahe jdfshudfs kjdvfkjdfskjdfhj
-
-type NavigationProp = DrawerNavigationProp<DrawerParamList>;
+import HeaderComponent from '../shared/header';
 
 const Profile = () => {
-  const [StudName, setStudName] = useState('');
-  const [RollNo, setRollNo] = useState('');
-  const [DOB, setDob] = useState(new Date());
-  const [Gender, setGender] = useState('');
-  const [Stud_address, setStudAddress] = useState('');
-  const [States, setStates] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [fcmToken, setFCMToken] = useState('');
+  const [firstName, setfirstName] = useState('');
+  const [lastName, setlastName] = useState('');
+  const [rollNo, setRollNo] = useState('');
+  const [dob, setDob] = useState(new Date());
+  const [datePickerVisible, setDatePickerVisible] = useState(false);
+  const [gender, setGender] = useState('');
+  const [address1, setAddress1] = useState('');
+  const [address2, setAddress2] = useState('');
+  const [pinCode, setPinCode] = useState('');
   const [city, setCity] = useState('');
+  const [state, setState] = useState('');
   const [email, setEmail] = useState('');
-  const [showDatePicker, setShowDatePicker] = useState(false);
 
-  const handleCancel = () => {
-    // Reset all state values to their initial state
-    setStudName('');
-    setRollNo('');
-    setDob(new Date());
-    setGender('');
-    setStudAddress('');
-    setStates('');
-    setCity('');
-    setEmail('');
+  const user = auth().currentUser;
+
+  const getFCMToken = async () => {
+    try {
+      const token = await messaging().getToken();
+      setFCMToken(token);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-  const handleRegistration = () => {
-    const registrationData = JSON.stringify({
-      StudName,
-      RollNo,
-      DOB,
-      Gender,
-      Stud_address,
-      States,
-      city,
-      email,
-    });
-    console.log(registrationData);
+  useEffect(() => {
+    getFCMToken();
+    const userRef = firestore().collection('Users').doc(user?.uid);
+    userRef
+      .get()
+      .then(documentSnapshot => {
+        if (documentSnapshot.exists) {
+          const userData = documentSnapshot.data();
+          setfirstName(userData?.firstName);
+          setlastName(userData?.lastName);
+          setRollNo(userData?.rollNo);
+          setEmail(userData?.email);
+          setGender(userData?.gender);
+          setAddress1(userData?.address1);
+          setAddress2(userData?.address2);
+          setPinCode(userData?.pinCode);
+          setCity(userData?.city);
+          setState(userData?.state);
+          const dobTimestamp = userData?.dob;
+          const dobDate = new Date(dobTimestamp.seconds * 1000);
+          setDob(dobDate);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching user data: ', error);
+        setError(error);
+      });
+  }, []);
+
+  const navigation = useNavigation<StackNavigationProp<RootParamList>>();
+
+  const showDatePicker = () => {
+    setDatePickerVisible(true);
   };
 
-  const handleDateChange = (event: any, selectedDate: any) => {
-    setShowDatePicker(false);
-    const dateOnly = selectedDate
-      ? selectedDate.toISOString().split('T')[0]
-      : '';
-    setDob(dateOnly);
+  const hideDatePicker = () => {
+    setDatePickerVisible(false);
   };
+
+  const handleConfirm = (date: React.SetStateAction<Date>) => {
+    setDob(date);
+    hideDatePicker();
+  };
+
+  const restrictNumericInput = (text: string) => {
+    if (!RE_DIGIT.test(text)) {
+      return '';
+    } else {
+      return text;
+    }
+  };
+
+  function handleUpdate(): void {
+    setLoading(true);
+    const userRef = firestore().collection('Users').doc(user?.uid);
+    const dobTimestamp = firestore.Timestamp.fromDate(dob);
+    userRef
+      .set({
+        firstName: firstName,
+        lastName: lastName,
+        rollNo: rollNo,
+        dob: dobTimestamp,
+        email: email,
+        gender: gender,
+        address1: address1,
+        address2: address2,
+        pinCode: pinCode,
+        city: city,
+        state: state,
+      })
+      .then(() => {
+        Snackbar.show({
+          text: 'Update successful',
+          duration: Snackbar.LENGTH_SHORT,
+        });
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error updating user data: ', error);
+        setError(error);
+        setLoading(false);
+      });
+  }
 
   return (
     <View>
@@ -75,7 +142,7 @@ const Profile = () => {
           <View style={styles.container}>
             <HeaderComponent></HeaderComponent>
             <View style={styles.contentContainer}>
-              <Text style={styles.labeltop}>Profile</Text>
+              <Text style={styles.labeltop}>View Profile</Text>
               <View style={styles.contentContainerp}>
                 <Image
                   source={require('../../assets/c1.jpg')}
@@ -83,17 +150,24 @@ const Profile = () => {
                 />
               </View>
               <View>
-                <Text style={styles.label}>Name</Text>
+                <Text style={styles.label}>First Name</Text>
                 <TextInput
                   style={styles.input}
-                  value={StudName}
-                  onChangeText={text => setStudName(text)}
-                  placeholder="Enter your name"
+                  value={firstName}
+                  onChangeText={text => setfirstName(text)}
+                  placeholder="Enter your first name"
+                />
+                <Text style={styles.label}>Last Name</Text>
+                <TextInput
+                  style={styles.input}
+                  value={lastName}
+                  onChangeText={text => setlastName(text)}
+                  placeholder="Enter your last name"
                 />
                 <Text style={styles.label}>Roll Number</Text>
                 <TextInput
                   style={styles.input}
-                  value={RollNo}
+                  value={rollNo}
                   onChangeText={text => setRollNo(text)}
                   placeholder="Enter your roll number"
                 />
@@ -106,7 +180,7 @@ const Profile = () => {
                 />
 
                 <Picker
-                  selectedValue={Gender}
+                  selectedValue={gender}
                   onValueChange={itemValue => setGender(itemValue)}
                   style={styles.picker}>
                   <Picker.Item label="Male" value="Male" />
@@ -114,36 +188,47 @@ const Profile = () => {
                   <Picker.Item label="Other" value="other" />
                 </Picker>
 
+                <Text style={styles.label}>Date of Birth</Text>
                 <TouchableOpacity
                   style={styles.button}
-                  onPress={() => setShowDatePicker(true)}>
-                  <Text style={styles.buttonText}>Select Date of Birth</Text>
+                  onPress={showDatePicker}>
+                  <Text style={styles.buttonText}>
+                    {dob ? dob.toLocaleDateString() : 'Select Date of Birth'}
+                  </Text>
                 </TouchableOpacity>
-                {showDatePicker && (
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={DOB}
-                    mode={'date'}
-                    display="default"
-                    onChange={handleDateChange}
-                  />
-                )}
-
-                <Text style={styles.label}>Address</Text>
-                <TextInput
-                  style={styles.input}
-                  value={Stud_address}
-                  onChangeText={text => setStudAddress(text)}
-                  placeholder="Enter your address"
-                  multiline
+                <DateTimePickerModal
+                  date={dob}
+                  isVisible={datePickerVisible}
+                  mode="date"
+                  onConfirm={handleConfirm}
+                  onCancel={hideDatePicker}
+                  maximumDate={new Date()}
                 />
 
-                <Text style={styles.label}>State</Text>
+                <Text style={styles.label}>Address Line 1</Text>
                 <TextInput
                   style={styles.input}
-                  value={States}
-                  onChangeText={text => setStates(text)}
-                  placeholder="Enter your state"
+                  value={address1}
+                  onChangeText={text => setAddress1(text)}
+                  placeholder="Enter your Address 1 (Room no, Bld no, etc)"
+                />
+
+                <Text style={styles.label}>Address Line 2 (Optional)</Text>
+                <TextInput
+                  style={styles.input}
+                  value={address2}
+                  onChangeText={text => setAddress2(text)}
+                  placeholder="Enter your Address 2 (Street name, Area, etc)"
+                />
+
+                <Text style={styles.label}>Pin Code</Text>
+                <TextInput
+                  style={styles.input}
+                  value={pinCode}
+                  onChangeText={text => setPinCode(restrictNumericInput(text))}
+                  placeholder="Enter your Pin Code"
+                  keyboardType="numeric"
+                  maxLength={6}
                 />
 
                 <Text style={styles.label}>City</Text>
@@ -154,24 +239,23 @@ const Profile = () => {
                   placeholder="Enter your city"
                 />
 
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={handleRegistration}>
-                  <Text style={styles.buttonText}>Register</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={handleCancel}>
-                  <Text style={styles.buttonText}>Cancel</Text>
+                <Text style={styles.label}>State</Text>
+                <TextInput
+                  style={styles.input}
+                  value={state}
+                  onChangeText={text => setState(text)}
+                  placeholder="Enter your state"
+                />
+
+                <TouchableOpacity style={styles.button} onPress={handleUpdate}>
+                  <Text style={styles.buttonText}>Save Changes</Text>
                 </TouchableOpacity>
               </View>
             </View>
+            <FooterComponent></FooterComponent>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-      {/* <FooterComponent ></FooterComponent> */}
-
-      <View style={styles.footer}>
-        <FooterComponent></FooterComponent>
-      </View>
     </View>
   );
 };
@@ -184,7 +268,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     marginTop: 10,
-    // height: viewheight(100),
     overflow: 'scroll',
     paddingBottom: 100,
   },
@@ -202,14 +285,11 @@ const styles = StyleSheet.create({
 
   footer: {
     position: 'absolute',
-    // flex:0.1,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'white',
-    // flexDirection:'row',
+    // backgroundColor: 'white',
     height: 50,
-    // alignItems:'center',
   },
 
   labeltop: {

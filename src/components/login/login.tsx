@@ -39,11 +39,6 @@ function Login(): React.JSX.Element {
   const [fcmToken, setFcmToken] = useState('');
   const [confirm, setConfirm] = useState<object | null>(null);
 
-  const isDarkMode = useColorScheme() === 'dark';
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
   //Hook to capture DeviceId
   useEffect(() => {
     DeviceInfo.getUniqueId()
@@ -76,23 +71,10 @@ function Login(): React.JSX.Element {
     <ScrollView
       contentContainerStyle={{
         flexGrow: 1,
-        backgroundColor: backgroundStyle.backgroundColor,
       }}>
       <SplashImage></SplashImage>
-      <Text
-        style={[
-          styles.educationTxt,
-          {backgroundColor: backgroundStyle.backgroundColor},
-        ]}>
-        EDUCATION
-      </Text>
-      <Text
-        style={[
-          styles.studentAppTxt,
-          {backgroundColor: backgroundStyle.backgroundColor},
-        ]}>
-        Student App
-      </Text>
+      <Text style={styles.educationTxt}>EDUCATION</Text>
+      <Text style={styles.studentAppTxt}>Student App</Text>
       <MobileNumberTextInput
         setOtpSent={setOtpSent}
         setConfirm={setConfirm}
@@ -117,7 +99,6 @@ function SplashImage(): React.JSX.Element {
   return (
     <View
       style={{
-        backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
         justifyContent: 'center',
         alignItems: 'center',
       }}>
@@ -142,12 +123,6 @@ function MobileNumberTextInput({
 }: MobileNumberTextInputProps): React.JSX.Element {
   const [number, onChangeNumber] = React.useState('');
   const [loading, setLoading] = useState(false);
-
-  const isDarkMode = useColorScheme() === 'dark';
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-    color: isDarkMode ? Colors.lighter : Colors.darker,
-  };
 
   const restrictNumericInput = (text: string) => {
     if (!RE_DIGIT.test(text)) {
@@ -174,11 +149,7 @@ function MobileNumberTextInput({
   };
 
   return (
-    <View
-      style={[
-        styles.container,
-        {backgroundColor: backgroundStyle.backgroundColor},
-      ]}>
+    <View style={styles.container}>
       <Text style={styles.txt}>Mobile Number</Text>
       <TextInput
         style={styles.txtinput}
@@ -229,8 +200,9 @@ const styles = StyleSheet.create({
   },
   txt: {
     letterSpacing: 1,
-    fontSize: 15,
+    fontSize: 18,
     color: 'grey',
+    marginTop: 20,
   },
   txtOtp: {
     fontWeight: 'normal',
@@ -262,12 +234,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     letterSpacing: 1,
     fontSize: 23,
+    color: 'black',
   },
   studentAppTxt: {
     alignSelf: 'center',
     fontSize: 18,
     paddingTop: 5,
-    paddingLeft: 20,
+    color: 'black',
   },
 });
 

@@ -19,6 +19,7 @@ import Dashboard from './src/components/dashboard/dashboard';
 import Login from './src/components/login/login';
 import Notifications from './src/components/notifications/notifications';
 import RegisterUser from './src/components/profile/registerUser';
+import Profile from './src/components/profile/profile';
 
 const Drawer = createDrawerNavigator();
 if (!firebase.apps.length) {
@@ -56,7 +57,7 @@ const MainStack = () => {
       />
       <Drawer.Screen
         name="View Profile"
-        component={RegisterUser}
+        component={Profile}
         options={{headerShown: false}}
       />
       <Drawer.Screen
@@ -83,12 +84,6 @@ function App(): React.JSX.Element {
     });
     return unsubscribe;
   }, []);
-
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
 
   const Stack = createNativeStackNavigator<RootParamList>();
 

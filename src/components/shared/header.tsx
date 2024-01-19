@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   header: {
     height: viewheight(5),
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     flexDirection: 'row',
   },
   iconContainer: {

@@ -9,12 +9,6 @@ import HeaderComponent from '../shared/header';
 import FooterComponent from '../shared/footer';
 
 function Dashboard(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
   const Drawer = createDrawerNavigator();
   return (
     <View style={styles.container}>
