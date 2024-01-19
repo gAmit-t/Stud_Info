@@ -13,13 +13,12 @@ import {
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {RootParamList} from './common/interfaces';
-import Dashboard from './components/dashboard/dashboard';
-import Login from './components/login/login';
-import Notifications from './components/notifications/notifications';
-import Profile from './components/profile/profile';
-import RegisterUser from './components/profile/registerUser';
 import firebaseConfig from './firebaseConfig';
+import {RootParamList} from './src/common/interfaces';
+import Dashboard from './src/components/dashboard/dashboard';
+import Login from './src/components/login/login';
+import Notifications from './src/components/notifications/notifications';
+import RegisterUser from './src/components/profile/registerUser';
 
 const Drawer = createDrawerNavigator();
 if (!firebase.apps.length) {
