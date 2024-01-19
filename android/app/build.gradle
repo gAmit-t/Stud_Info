@@ -113,7 +113,7 @@ dependencies {
     implementation ("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
-
+    implementation("androidx.browser:browser:1.2.0")
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
