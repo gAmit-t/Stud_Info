@@ -17,7 +17,15 @@ const NotificationCard = ({
   isRead,
   onClose,
 }: NotificationCardProps) => {
-  const formattedTimestamp = moment(timestamp).format('hh:mm A | DD/MM');
+  // Destructure the timestamp object
+  const {seconds, nanoseconds} = timestamp;
+
+  // Convert Firestore timestamp to JavaScript Date object
+  const milliseconds = seconds * 1000 + nanoseconds / 1e6;
+  const date = moment(milliseconds).toDate();
+
+  // Format the date
+  const formattedTimestamp = moment(date).format('hh:mm A | DD/MM');
 
   return (
     <View style={[styles.card, isRead ? styles.readCard : styles.unreadCard]}>

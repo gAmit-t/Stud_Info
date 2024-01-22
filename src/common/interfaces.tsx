@@ -17,8 +17,13 @@ export interface DrawerParamList extends ParamListBase {
 export interface INotificationCardItem {
   id: string;
   title: string;
-  timestamp: Date;
+  timestamp: IFirestoreTimestamp;
   message: string;
   isClosed: boolean;
   isRead: boolean;
+}
+
+export interface IFirestoreTimestamp {
+  seconds: number;
+  nanoseconds: number;
 }

@@ -1,21 +1,23 @@
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import React from 'react';
-import {StyleSheet, Text, useColorScheme, View} from 'react-native';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import Login from '../login/login';
-import Notifications from '../notifications/notifications';
-import Profile from '../profile/profile';
-import HeaderComponent from '../shared/header';
+import {StyleSheet, View} from 'react-native';
 import FooterComponent from '../shared/footer';
+import HeaderComponent from '../shared/header';
+import Calendar from './Calendar';
+import Courses from './Courses';
+import MyTabBar from './field_container';
+
+const Tab = createMaterialTopTabNavigator();
 
 function Dashboard(): React.JSX.Element {
-  const Drawer = createDrawerNavigator();
   return (
     <View style={styles.container}>
       <HeaderComponent></HeaderComponent>
-      <View style={styles.contentContainer}>
-        <Text style={styles.text}>This is dashboard</Text>
-      </View>
+      <Tab.Navigator tabBar={props => <MyTabBar {...props} />}>
+        <Tab.Screen name="Courses" component={Courses} />
+        <Tab.Screen name="Calendar" component={Calendar} />
+      </Tab.Navigator>
+
       <FooterComponent></FooterComponent>
     </View>
   );

@@ -170,7 +170,6 @@ const RegisterUser = () => {
       <KeyboardAvoidingView behavior="padding">
         <ScrollView>
           <View style={styles.container}>
-            <HeaderComponent></HeaderComponent>
             <View style={styles.contentContainer}>
               <Text style={styles.labeltop}>Register User</Text>
               <View style={styles.contentContainerp}>
@@ -186,6 +185,7 @@ const RegisterUser = () => {
                   value={firstName}
                   onChangeText={text => setfirstName(text)}
                   placeholder="Enter your first name"
+                  placeholderTextColor="black"
                 />
                 <Text style={styles.label}>Last Name</Text>
                 <TextInput
@@ -193,6 +193,7 @@ const RegisterUser = () => {
                   value={lastName}
                   onChangeText={text => setlastName(text)}
                   placeholder="Enter your last name"
+                  placeholderTextColor="black"
                 />
                 <Text style={styles.label}>Roll Number</Text>
                 <TextInput
@@ -200,6 +201,7 @@ const RegisterUser = () => {
                   value={rollNo}
                   onChangeText={text => setRollNo(text)}
                   placeholder="Enter your roll number"
+                  placeholderTextColor="black"
                 />
                 <Text style={styles.label}>Email</Text>
                 <TextInput
@@ -207,16 +209,20 @@ const RegisterUser = () => {
                   value={email}
                   onChangeText={text => setEmail(text)}
                   placeholder="Enter your Email"
+                  placeholderTextColor="black"
                 />
 
-                <Picker
-                  selectedValue={gender}
-                  onValueChange={itemValue => setGender(itemValue)}
-                  style={styles.picker}>
-                  <Picker.Item label="Male" value="Male" />
-                  <Picker.Item label="Female" value="Female" />
-                  <Picker.Item label="Other" value="other" />
-                </Picker>
+                <Text style={styles.label}>Select Gender</Text>
+                <View style={styles.pickerContainer}>
+                  <Picker
+                    selectedValue={gender}
+                    onValueChange={itemValue => setGender(itemValue)}
+                    style={styles.picker}>
+                    <Picker.Item label="Male" value="Male" />
+                    <Picker.Item label="Female" value="Female" />
+                    <Picker.Item label="Other" value="other" />
+                  </Picker>
+                </View>
 
                 <Text style={styles.label}>Date of Birth</Text>
                 <TouchableOpacity
@@ -241,6 +247,7 @@ const RegisterUser = () => {
                   value={address1}
                   onChangeText={text => setAddress1(text)}
                   placeholder="Enter your Address 1 (Room no, Bld no, etc)"
+                  placeholderTextColor="black"
                 />
 
                 <Text style={styles.label}>Address Line 2 (Optional)</Text>
@@ -249,6 +256,7 @@ const RegisterUser = () => {
                   value={address2}
                   onChangeText={text => setAddress2(text)}
                   placeholder="Enter your Address 2 (Street name, Area, etc)"
+                  placeholderTextColor="black"
                 />
 
                 <Text style={styles.label}>Pin Code</Text>
@@ -267,6 +275,7 @@ const RegisterUser = () => {
                   value={city}
                   onChangeText={text => setCity(text)}
                   placeholder="Enter your city"
+                  placeholderTextColor="black"
                 />
 
                 <Text style={styles.label}>State</Text>
@@ -275,6 +284,7 @@ const RegisterUser = () => {
                   value={state}
                   onChangeText={text => setState(text)}
                   placeholder="Enter your state"
+                  placeholderTextColor="black"
                 />
 
                 <TouchableOpacity
@@ -284,7 +294,6 @@ const RegisterUser = () => {
                 </TouchableOpacity>
               </View>
             </View>
-            <FooterComponent></FooterComponent>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -328,10 +337,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
     textAlign: 'center',
+    color: 'black',
   },
   label: {
     fontSize: 16,
     marginBottom: 5,
+    color: 'black',
   },
   input: {
     width: '100%',
@@ -340,20 +351,24 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     padding: 8,
+    color: 'black',
+    borderRadius: 5,
+  },
+  pickerContainer: {
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 10,
   },
   picker: {
     width: '100%',
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    padding: 8,
+    color: 'black',
   },
   button: {
     backgroundColor: 'blue',
     padding: 10,
     borderRadius: 5,
-    marginTop: 10,
+    marginBottom: 10,
   },
   buttonText: {
     color: 'white',

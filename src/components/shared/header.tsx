@@ -1,7 +1,14 @@
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
@@ -14,6 +21,10 @@ interface UserData {
   firstName: string;
   lastName: string;
 }
+
+const {width, height} = Dimensions.get('window');
+
+const scale = (size: number) => (width / 350) * size;
 
 const HeaderComponent = () => {
   const navigation = useNavigation<NavigationProp>();
@@ -108,6 +119,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     color: 'black',
+    fontSize: scale(18),
   },
   badgeContainer: {
     position: 'absolute',

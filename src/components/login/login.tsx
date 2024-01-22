@@ -1,9 +1,11 @@
+import auth from '@react-native-firebase/auth';
+import messaging from '@react-native-firebase/messaging';
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
-  Button,
   Image,
+  PermissionsAndroid,
   ScrollView,
   StyleSheet,
   Text,
@@ -12,15 +14,11 @@ import {
   View,
   useColorScheme,
 } from 'react-native';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {viewheight, viewwidth} from '../../common/HelperFunctions';
-import {RE_DIGIT, tealColor} from '../../common/Constants';
-import OtpContainer from './OtpContainer';
-import {PermissionsAndroid} from 'react-native';
-import messaging from '@react-native-firebase/messaging';
 import DeviceInfo from 'react-native-device-info';
-import auth from '@react-native-firebase/auth';
+import {RE_DIGIT, tealColor} from '../../common/Constants';
+import {viewheight, viewwidth} from '../../common/HelperFunctions';
 import FadeInView from '../../common/animations';
+import OtpContainer from './OtpContainer';
 
 //Permission request for sending message on android
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
@@ -144,6 +142,7 @@ function MobileNumberTextInput({
       const confirmation = await auth().signInWithPhoneNumber(
         '+91' + number.toString(),
       );
+      const verificationId: string = confirmation.verificationId as string;
       setConfirm(confirmation);
       setOtpSent(true);
     } catch (error) {
