@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Image, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DrawerParamList} from '../../common/interfaces';
@@ -12,13 +12,26 @@ const FooterComponent = () => {
   const navigation = useNavigation<NavigationProp>();
 
   const handleSignOut = async () => {
-    if (auth().currentUser) {
-      await auth().signOut();
-    }
-    navigation.reset({
-      index: 0,
-      routes: [{name: 'Login'}],
-    });
+    Alert.alert('Logout Confirmation', 'Are you sure you want to logout?', [
+      {
+        text: 'Cancel',
+        onPress: () => {},
+        style: 'cancel',
+      },
+      {
+        text: 'Yes',
+        onPress: () => {
+          auth().signOut();
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'Login'}],
+          });
+        },
+      },
+    ]);
+    // if (auth().currentUser) {
+    //   await auth().signOut();
+    // }
   };
 
   return (

@@ -57,15 +57,18 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: 'black',
   },
   timestamp: {
     fontSize: 16,
-    color: '#666',
+    // color: '#666',
     marginBottom: 10,
+    color: 'black',
   },
   message: {
     fontSize: 14,
     marginBottom: 10,
+    color: 'black',
   },
   closeButton: {
     position: 'absolute',

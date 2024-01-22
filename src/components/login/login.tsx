@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Button,
   Image,
   ScrollView,
@@ -133,6 +134,10 @@ function MobileNumberTextInput({
   };
 
   const handleSubmit = async () => {
+    if (number.length !== 10) {
+      Alert.alert('Please enter a 10 digit mobile number');
+      return;
+    }
     setLoading(true);
     // Send a verification code to the user's mobile number
     try {
@@ -157,6 +162,7 @@ function MobileNumberTextInput({
         value={number}
         placeholder="Enter Mobile Number"
         keyboardType="numeric"
+        placeholderTextColor="black"
         maxLength={10}></TextInput>
       {loading ? (
         <ActivityIndicator
@@ -165,7 +171,11 @@ function MobileNumberTextInput({
           color={tealColor}
         />
       ) : (
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            {backgroundColor: number.length == 10 ? '#008080' : '#D3D3D3'},
+          ]}>
           <View>
             <Text onPress={handleSubmit} style={styles.buttonText}>
               Get OTP
@@ -221,12 +231,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
     alignSelf: 'center',
     paddingHorizontal: 30,
-    backgroundColor: '#D3D3D3',
+    // backgroundColor: '#D3D3D3',
     padding: 8,
     borderRadius: 5,
   },
   buttonText: {
-    color: '#333',
+    color: 'white',
     fontSize: 17,
   },
   educationTxt: {

@@ -14,7 +14,7 @@ function Dashboard(): React.JSX.Element {
     <View style={styles.container}>
       <HeaderComponent></HeaderComponent>
       <View style={styles.contentContainer}>
-        <Text>This is dashboard</Text>
+        <Text style={styles.text}>This is dashboard</Text>
       </View>
       <FooterComponent></FooterComponent>
     </View>
