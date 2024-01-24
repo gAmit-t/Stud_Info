@@ -95,8 +95,6 @@ const Notifications = () => {
               await firestore().collection('Notifications').doc(id).update({
                 isClosed: true,
               });
-
-              setUnreadCount(prevCount => (prevCount > 0 ? prevCount - 1 : 0));
             } catch (error) {
               console.error('Failed to update isClosed field:', error);
             }

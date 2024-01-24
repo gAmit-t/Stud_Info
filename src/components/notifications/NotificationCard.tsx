@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
   unreadCard: {
     backgroundColor: '#cff4fc',
-    fontWeight: 'bold',
+    fontWeight: 'normal',
   },
   header: {
     fontSize: 20,

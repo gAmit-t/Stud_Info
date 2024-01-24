@@ -57,7 +57,7 @@ const HeaderComponent = () => {
 
     const intervalId = setInterval(() => {
       fetchUnreadNotifications();
-    }, 30000); // Check every minute
+    }, 10000);
 
     fetchUserData();
     fetchUnreadNotifications();

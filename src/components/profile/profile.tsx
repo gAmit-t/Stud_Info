@@ -27,6 +27,7 @@ import {
   sendLocalNotification,
 } from '../../common/notificationHandler';
 import moment from 'moment';
+import {color} from 'react-native-elements/dist/helpers';
 
 const Profile = () => {
   const [loading, setLoading] = useState(false);
@@ -91,7 +92,7 @@ const Profile = () => {
   const navigation = useNavigation<StackNavigationProp<RootParamList>>();
 
   const showDatePicker = () => {
-    setDatePickerVisible(true);
+    setDatePickerVisible(!datePickerVisible);
   };
 
   const hideDatePicker = () => {
@@ -116,7 +117,7 @@ const Profile = () => {
     const userRef = firestore().collection('Users').doc(user?.uid);
     const dobTimestamp = firestore.Timestamp.fromDate(dob);
     userRef
-      .set({
+      .update({
         firstName: firstName,
         lastName: lastName,
         rollNo: rollNo,
@@ -213,10 +214,8 @@ const Profile = () => {
                 </View>
 
                 <Text style={styles.label}>Date of Birth</Text>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={showDatePicker}>
-                  <Text style={styles.buttonText}>
+                <TouchableOpacity style={styles.input} onPress={showDatePicker}>
+                  <Text style={{color: 'black'}}>
                     {dob ? dob.toLocaleDateString() : 'Select Date of Birth'}
                   </Text>
                 </TouchableOpacity>

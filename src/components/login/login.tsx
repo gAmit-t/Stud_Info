@@ -20,9 +20,9 @@ import {viewheight, viewwidth} from '../../common/HelperFunctions';
 import FadeInView from '../../common/animations';
 import OtpContainer from './OtpContainer';
 
-// //Permission request for sending message on android
-// PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
-// PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+//Permission request for sending message on android
+PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 
 type MobileNumberTextInputProps = {
   setOtpSent: React.Dispatch<React.SetStateAction<boolean>>;

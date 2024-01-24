@@ -89,6 +89,7 @@ function OtpContainer({
           longitude: location.coords.longitude,
         });
         const userData = userDoc.data();
+        console.log(userData);
 
         if (userData?.isRegistered) {
           setisVerifying(false);
