@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {Alert, StyleSheet, useColorScheme} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {PermissionsAndroid, StyleSheet} from 'react-native';
 
 import firebase from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
@@ -12,19 +12,27 @@ import {
 } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import PushNotification, {Importance} from 'react-native-push-notification';
 import firebaseConfig from './firebaseConfig';
 import {RootParamList} from './src/common/interfaces';
+import {
+  createNotification,
+  sendLocalNotification,
+} from './src/common/notificationHandler';
 import Dashboard from './src/components/dashboard/dashboard';
 import Login from './src/components/login/login';
 import Notifications from './src/components/notifications/notifications';
-import RegisterUser from './src/components/profile/registerUser';
 import Profile from './src/components/profile/profile';
+import RegisterUser from './src/components/profile/registerUser';
 
 const Drawer = createDrawerNavigator();
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
+
+PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+
 function ScreenToNavigate() {
   const navigation = useNavigation();
   if (auth().currentUser) {
@@ -75,21 +83,72 @@ const MainStack = () => {
 };
 
 function App(): React.JSX.Element {
+  const [initialRoute, setInitialRoute] = useState('Login');
   useEffect(() => {
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert(
-        'A new FCM message arrived!',
-        JSON.stringify(remoteMessage.notification?.body),
-      );
-    });
-    return unsubscribe;
+    initPushNotification();
   }, []);
 
-  const Stack = createNativeStackNavigator<RootParamList>();
+  // Initiate Push notification, create channel
+  const initPushNotification = () => {
+    PushNotification.configure({
+      onRegister: function (token: any) {},
+      onNotification: function (notification: any) {},
 
+      permissions: {
+        alert: true,
+        badge: true,
+        sound: true,
+      },
+      popInitialNotification: true,
+      requestPermissions: true,
+    });
+    PushNotification.createChannel(
+      {
+        channelId: 'channel-id',
+        channelName: 'My channel',
+        channelDescription: 'A channel to categorise notifications',
+        playSound: false,
+        soundName: 'default',
+        importance: Importance.HIGH,
+        vibrate: true,
+      },
+      created => console.log(`createChannel returned '${created}'`),
+    );
+  };
+
+  const user = auth().currentUser;
+  // Save in firestore when app in background(push notification is automatically handled)
+  messaging().setBackgroundMessageHandler(async remoteMessage => {
+    if (user) {
+      createNotification(
+        user?.uid,
+        remoteMessage.notification!['title'] ?? 'N/A',
+        remoteMessage.notification!['body'] ?? 'N/A',
+      );
+      console.log('creates onBackground');
+    }
+  });
+
+  // Send push notification and save in firestore when app in foreground
+  messaging().onMessage(async remoteMessage => {
+    if (user) {
+      sendLocalNotification(
+        remoteMessage.notification!['title'] ?? 'N/A',
+        remoteMessage.notification!['body'] ?? 'N/A',
+      );
+      createNotification(
+        user?.uid,
+        remoteMessage.notification!['title'] ?? 'N/A',
+        remoteMessage.notification!['body'] ?? 'N/A',
+      );
+      console.log(remoteMessage);
+    }
+  });
+
+  const Stack = createNativeStackNavigator<RootParamList>();
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName={initialRoute}>
         <Stack.Screen
           name="Login"
           component={Login}

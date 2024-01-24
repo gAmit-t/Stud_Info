@@ -22,6 +22,10 @@ import {RE_DIGIT} from '../../common/Constants';
 import {DrawerParamList, RootParamList} from '../../common/interfaces';
 import FooterComponent from '../shared/footer';
 import HeaderComponent from '../shared/header';
+import {
+  createNotification,
+  sendLocalNotification,
+} from '../../common/notificationHandler';
 
 const Profile = () => {
   const [loading, setLoading] = useState(false);
@@ -41,6 +45,12 @@ const Profile = () => {
   const [email, setEmail] = useState('');
 
   const user = auth().currentUser;
+
+  const currentDateTime = new Date();
+  const formattedDate = `${currentDateTime.getDate()}/${
+    currentDateTime.getMonth() + 1
+  }/${currentDateTime.getFullYear()} ${currentDateTime.getHours()}:${currentDateTime.getMinutes()}`;
+  console.log(formattedDate);
 
   const getFCMToken = async () => {
     try {
@@ -122,10 +132,19 @@ const Profile = () => {
         state: state,
       })
       .then(() => {
-        Snackbar.show({
-          text: 'Update successful',
-          duration: Snackbar.LENGTH_SHORT,
-        });
+        sendLocalNotification(
+          'Profile Update Successful',
+          `${
+            firstName + ' ' + lastName
+          }. You have successfully updated your profile at ${formattedDate}.`,
+        );
+        createNotification(
+          user!.uid,
+          'Profile Update Successful',
+          `${
+            firstName + ' ' + lastName
+          }. You have successfully updated your profile at ${formattedDate}.`,
+        );
         setLoading(false);
       })
       .catch(error => {

@@ -35,7 +35,6 @@ const Notifications = () => {
 
     try {
       const notificationsCollection = firestore().collection('Notifications');
-      console.log('NotificationCollection: ', notificationsCollection);
       const querySnapshot = await notificationsCollection
         .where('userId', '==', userId)
         .orderBy('isRead', 'asc')

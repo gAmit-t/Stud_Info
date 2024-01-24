@@ -45,7 +45,7 @@ function OtpContainer({
 
   const navigation = useNavigation<StackNavigationProp<RootParamList>>();
   useEffect(() => {
-    console.log(auth().currentUser);
+    console.log(auth().currentUser, fcmToken);
     if (otpSent) {
       let countdown = 90;
       setTimeLeft(countdown);

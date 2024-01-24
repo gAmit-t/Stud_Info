@@ -1,13 +1,10 @@
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {RouteProp} from '@react-navigation/native';
-import {Picker} from '@react-native-picker/picker';
-import {DrawerNavigationProp} from '@react-navigation/drawer';
-import React, {useEffect, useState} from 'react';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import messaging, {
-  FirebaseMessagingTypes,
-} from '@react-native-firebase/messaging';
+import messaging from '@react-native-firebase/messaging';
+import {Picker} from '@react-native-picker/picker';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
   Image,
@@ -19,12 +16,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {DrawerParamList, RootParamList} from '../../common/interfaces';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {RE_DIGIT} from '../../common/Constants';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import HeaderComponent from '../shared/header';
-import FooterComponent from '../shared/footer';
+import {RootParamList} from '../../common/interfaces';
+import {sendLocalNotification} from '../../common/notificationHandler';
 
 const RegisterUser = () => {
   const [fcmToken, setFCMToken] = useState('');
@@ -93,21 +88,6 @@ const RegisterUser = () => {
         isRegistered: true, // Set isRegistered to true after successful registration
       });
 
-      // Display an alert upon successful registration
-      Alert.alert(
-        'Registration Successful',
-        `Congratulations ${firstName} ${lastName}. You have successfully registered.`,
-      );
-
-      // Send a push notification to the user's device
-      await messaging().sendMessage({
-        to: fcmToken,
-        notification: {
-          title: 'Registration Successful',
-          body: `Congratulations ${firstName} ${lastName}. You have successfully registered.`,
-        },
-      } as FirebaseMessagingTypes.RemoteMessage);
-
       // Save the push notification in Firestore
       const notificationRef = await firestore()
         .collection('Notifications')
@@ -119,6 +99,12 @@ const RegisterUser = () => {
           isRead: false,
           isClosed: false,
         });
+
+      // Send push Notification to device
+      sendLocalNotification(
+        'Registration Successful',
+        `Congratulations ${firstName} ${lastName}. You have successfully registered.`,
+      );
 
       // Update user's document to include the notification ID
       await firestore()
@@ -265,6 +251,7 @@ const RegisterUser = () => {
                   value={pinCode}
                   onChangeText={text => setPinCode(restrictNumericInput(text))}
                   placeholder="Enter your Pin Code"
+                  placeholderTextColor="black"
                   keyboardType="numeric"
                   maxLength={6}
                 />

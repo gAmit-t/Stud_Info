@@ -21,7 +21,6 @@ const Courses: React.FC = () => {
             key={index}
             style={styles.link}
             onPress={() => Linking.openURL(url)}>
-            <View style={styles.underline} />
             {text}
           </Text>
         ))}
@@ -53,10 +52,10 @@ const styles = StyleSheet.create({
 
   containerStyle: {
     height: viewheight(60),
-    width: viewwidth(85),
+    width: viewwidth(90),
     borderRadius: 5,
-    marginTop: 20,
-    backgroundColor: '#f486c0',
+    marginTop: 10,
+    backgroundColor: '#90a9f1',
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
@@ -70,7 +69,7 @@ const styles = StyleSheet.create({
     width: 110,
     height: 110,
     borderRadius: 50,
-    backgroundColor: '#f486c0',
+    backgroundColor: '#a6baf3',
     transform: [{translateY: -60}, {translateX: -20}],
   },
 });
