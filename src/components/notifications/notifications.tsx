@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import {DrawerParamList, INotificationCardItem} from '../../common/interfaces';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import HeaderComponent from '../shared/header';
@@ -9,6 +9,7 @@ import NotificationCard from './NotificationCard';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import {Alert} from 'react-native';
+import {viewheight} from '../../common/HelperFunctions';
 
 type NavigationProp = DrawerNavigationProp<DrawerParamList>;
 
@@ -73,7 +74,7 @@ const Notifications = () => {
   const handleClose = async (id: string) => {
     Alert.alert(
       'Close Notification',
-      'Are you sure you want to close this notification?',
+      'Are you sure you want to remove this notification?',
       [
         {
           text: 'Cancel',
@@ -108,7 +109,7 @@ const Notifications = () => {
   return (
     <View style={styles.container}>
       <HeaderComponent></HeaderComponent>
-      <View style={styles.notificationContainer}>
+      <ScrollView style={styles.notificationContainer}>
         {notifications.map(
           notification =>
             !notification.isClosed && (
@@ -124,7 +125,7 @@ const Notifications = () => {
               />
             ),
         )}
-      </View>
+      </ScrollView>
       <FooterComponent></FooterComponent>
     </View>
   );
@@ -133,11 +134,13 @@ const Notifications = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    marginHorizontal: 20,
+    marginTop: 20,
+    justifyContent: 'space-between',
   },
   notificationContainer: {
     marginTop: 10,
+    marginBottom: viewheight(8),
   },
 });
 

@@ -41,7 +41,7 @@ const NotificationCard = ({
 
 const styles = StyleSheet.create({
   card: {
-    width: '100%',
+    width: '98%',
     padding: 10,
     marginVertical: 5,
     shadowColor: '#000',
@@ -50,16 +50,18 @@ const styles = StyleSheet.create({
       height: 2,
     },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowRadius: 5,
     elevation: 5,
     borderRadius: 5,
     position: 'relative',
   },
   readCard: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#e2e3e5',
+    fontWeight: 'normal',
   },
   unreadCard: {
-    backgroundColor: 'red',
+    backgroundColor: '#cff4fc',
+    fontWeight: 'bold',
   },
   header: {
     fontSize: 20,

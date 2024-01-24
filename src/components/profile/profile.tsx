@@ -26,6 +26,7 @@ import {
   createNotification,
   sendLocalNotification,
 } from '../../common/notificationHandler';
+import moment from 'moment';
 
 const Profile = () => {
   const [loading, setLoading] = useState(false);
@@ -47,10 +48,7 @@ const Profile = () => {
   const user = auth().currentUser;
 
   const currentDateTime = new Date();
-  const formattedDate = `${currentDateTime.getDate()}/${
-    currentDateTime.getMonth() + 1
-  }/${currentDateTime.getFullYear()} ${currentDateTime.getHours()}:${currentDateTime.getMinutes()}`;
-  console.log(formattedDate);
+  const formattedDate = moment(currentDateTime).format('hh:mm A | DD/MM');
 
   const getFCMToken = async () => {
     try {
@@ -136,14 +134,14 @@ const Profile = () => {
           'Profile Update Successful',
           `${
             firstName + ' ' + lastName
-          }. You have successfully updated your profile at ${formattedDate}.`,
+          }. You have successfully updated your profile at ${formattedDate.toString()}.`,
         );
         createNotification(
           user!.uid,
           'Profile Update Successful',
           `${
             firstName + ' ' + lastName
-          }. You have successfully updated your profile at ${formattedDate}.`,
+          }. You have successfully updated your profile at ${formattedDate.toString()}.`,
         );
         setLoading(false);
       })

@@ -57,7 +57,7 @@ const HeaderComponent = () => {
 
     const intervalId = setInterval(() => {
       fetchUnreadNotifications();
-    }, 60000); // Check every minute
+    }, 30000); // Check every minute
 
     fetchUserData();
     fetchUnreadNotifications();
@@ -100,7 +100,7 @@ const HeaderComponent = () => {
 const styles = StyleSheet.create({
   header: {
     height: viewheight(5),
-    alignItems: 'center',
+    alignItems: 'stretch',
     justifyContent: 'space-between',
     flexDirection: 'row',
   },

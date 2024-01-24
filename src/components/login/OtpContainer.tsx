@@ -80,6 +80,8 @@ function OtpContainer({
         // User exists, update user data
         await firestore().collection('Users').doc(user.uid).update({
           // Add fields you want to update here
+          uid: user.uid,
+          phoneNumber: user.phoneNumber,
           lastLogin: Date.now(),
           fcmToken: fcmToken,
           deviceId: deviceId,

@@ -29,9 +29,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
   },
-  contentContainer: {
-    marginTop: 10,
-  },
   text: {
     fontSize: 18,
     color: '#333',
