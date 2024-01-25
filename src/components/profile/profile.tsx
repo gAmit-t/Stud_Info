@@ -18,6 +18,9 @@ import {
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {RE_DIGIT} from '../../common/Constants';
+import {DrawerParamList, RootParamList} from '../../common/Interfaces';
+import FooterComponent from '../shared/footer';
+import HeaderComponent from '../shared/header';
 import {
   createNotification,
   sendLocalNotification,
