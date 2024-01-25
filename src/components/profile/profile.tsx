@@ -19,7 +19,7 @@ import {
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Snackbar from 'react-native-snackbar';
 import {RE_DIGIT} from '../../common/Constants';
-import {DrawerParamList, RootParamList} from '../../common/interfaces';
+import {DrawerParamList, RootParamList} from '../../common/Interfaces';
 import FooterComponent from '../shared/footer';
 import HeaderComponent from '../shared/header';
 import {
