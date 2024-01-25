@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
-import {DrawerParamList, INotificationCardItem} from '../../common/interfaces';
+import {DrawerParamList, INotificationCardItem} from '../../common/Interfaces';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import HeaderComponent from '../shared/header';
 import FooterComponent from '../shared/footer';

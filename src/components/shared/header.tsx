@@ -12,7 +12,7 @@ import {
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
-import {DrawerParamList} from '../../common/interfaces';
+import {DrawerParamList} from '../../common/Interfaces';
 import {viewheight} from '../../common/HelperFunctions';
 
 type NavigationProp = DrawerNavigationProp<DrawerParamList>;

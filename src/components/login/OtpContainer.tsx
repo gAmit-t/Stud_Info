@@ -14,7 +14,7 @@ import React, {useEffect, useState} from 'react';
 import {OTP_COUNT, tealColor} from '../../common/Constants';
 import {ParamListBase, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {RootParamList} from '../../common/interfaces';
+import {RootParamList} from '../../common/Interfaces';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {getLocation} from '../../common/HelperFunctions';
@@ -121,6 +121,7 @@ function OtpContainer({
         navigation.navigate('RegisterUser');
       }
     } catch (error) {
+      setisVerifying(false);
       console.log(error);
     }
   };

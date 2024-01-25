@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {PermissionsAndroid, StyleSheet} from 'react-native';
 
 import firebase from '@react-native-firebase/app';
@@ -14,18 +14,20 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
 import PushNotification, {Importance} from 'react-native-push-notification';
 import firebaseConfig from './firebaseConfig';
-import {RootParamList} from './src/common/interfaces';
+import {RootParamList} from './src/common/Interfaces';
 import {
   createNotification,
   sendLocalNotification,
-} from './src/common/notificationHandler';
+} from './src/common/NotificationHandler';
 import Dashboard from './src/components/dashboard/dashboard';
 import Login from './src/components/login/login';
 import Notifications from './src/components/notifications/notifications';
 import Profile from './src/components/profile/profile';
 import RegisterUser from './src/components/profile/registerUser';
+import {SUPERADMIN_PHONE_NUMBER} from './src/common/Constants';
+import AdminPanel from './src/components/adminPanel/adminPanel';
+import {UserProvider, useUser} from './src/common/Providers/UserProvider';
 
-const Drawer = createDrawerNavigator();
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
@@ -56,6 +58,7 @@ function ScreenToNavigate() {
 
 const MainStack = () => {
   const Drawer = createDrawerNavigator();
+  const user = useUser();
   return (
     <Drawer.Navigator>
       <Drawer.Screen
@@ -78,6 +81,14 @@ const MainStack = () => {
         component={ScreenToNavigate}
         options={{headerShown: false, unmountOnBlur: true}}
       />
+      {user &&
+        user.user?.phoneNumber?.toString() === SUPERADMIN_PHONE_NUMBER && (
+          <Drawer.Screen
+            name="AdminPanel"
+            component={AdminPanel}
+            options={{headerShown: false}}
+          />
+        )}
     </Drawer.Navigator>
   );
 };
@@ -147,30 +158,34 @@ function App(): React.JSX.Element {
 
   const Stack = createNativeStackNavigator<RootParamList>();
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName={initialRoute}>
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="RegisterUser"
-          component={RegisterUser}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Notifications"
-          component={Notifications}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Main"
-          component={MainStack}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <UserProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName={user ? 'Main' : 'Login'}>
+          {user ? null : (
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{headerShown: false}}
+            />
+          )}
+          <Stack.Screen
+            name="RegisterUser"
+            component={RegisterUser}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Notifications"
+            component={Notifications}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Main"
+            component={MainStack}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </UserProvider>
   );
 }
 

@@ -25,7 +25,7 @@ import HeaderComponent from '../shared/header';
 import {
   createNotification,
   sendLocalNotification,
-} from '../../common/notificationHandler';
+} from '../../common/NotificationHandler';
 import moment from 'moment';
 import {color} from 'react-native-elements/dist/helpers';
 

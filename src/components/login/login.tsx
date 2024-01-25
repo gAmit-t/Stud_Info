@@ -17,7 +17,7 @@ import {
 import DeviceInfo from 'react-native-device-info';
 import {RE_DIGIT, tealColor} from '../../common/Constants';
 import {viewheight, viewwidth} from '../../common/HelperFunctions';
-import FadeInView from '../../common/animations';
+import FadeInView from '../../common/Animations';
 import OtpContainer from './OtpContainer';
 
 //Permission request for sending message on android

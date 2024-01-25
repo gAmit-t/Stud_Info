@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import {INotificationCardItem} from '../../common/interfaces';
+import {INotificationCardItem} from '../../common/Interfaces';
 import moment from 'moment';
 
 interface NotificationCardProps extends INotificationCardItem {

@@ -18,8 +18,8 @@ import {
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {RE_DIGIT} from '../../common/Constants';
-import {RootParamList} from '../../common/interfaces';
-import {sendLocalNotification} from '../../common/notificationHandler';
+import {RootParamList} from '../../common/Interfaces';
+import {sendLocalNotification} from '../../common/NotificationHandler';
 
 const RegisterUser = () => {
   const [fcmToken, setFCMToken] = useState('');
