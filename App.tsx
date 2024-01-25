@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {PermissionsAndroid, StyleSheet} from 'react-native';
 
 import firebase from '@react-native-firebase/app';
@@ -14,19 +14,21 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
 import PushNotification, {Importance} from 'react-native-push-notification';
 import firebaseConfig from './firebaseConfig';
+import {SUPERADMIN_PHONE_NUMBER} from './src/common/Constants';
 import {RootParamList} from './src/common/Interfaces';
 import {
   createNotification,
   sendLocalNotification,
 } from './src/common/NotificationHandler';
+import {navigationRef} from './src/common/Providers/GlobalNavRef';
+import {UserProvider, useUser} from './src/common/Providers/UserProvider';
+import AdminPanel from './src/components/adminPanel/adminPanel';
 import Dashboard from './src/components/dashboard/dashboard';
 import Login from './src/components/login/login';
 import Notifications from './src/components/notifications/notifications';
 import Profile from './src/components/profile/profile';
 import RegisterUser from './src/components/profile/registerUser';
-import {SUPERADMIN_PHONE_NUMBER} from './src/common/Constants';
-import AdminPanel from './src/components/adminPanel/adminPanel';
-import {UserProvider, useUser} from './src/common/Providers/UserProvider';
+import CreateNotification from './src/components/adminPanel/CreateNotification';
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
@@ -159,7 +161,7 @@ function App(): React.JSX.Element {
   const Stack = createNativeStackNavigator<RootParamList>();
   return (
     <UserProvider>
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         <Stack.Navigator initialRouteName={user ? 'Main' : 'Login'}>
           {user ? null : (
             <Stack.Screen
@@ -176,6 +178,11 @@ function App(): React.JSX.Element {
           <Stack.Screen
             name="Notifications"
             component={Notifications}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="CreateNotification"
+            component={CreateNotification}
             options={{headerShown: false}}
           />
           <Stack.Screen

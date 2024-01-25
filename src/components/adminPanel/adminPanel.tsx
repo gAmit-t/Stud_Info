@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import HeaderComponent from '../shared/header';
 import FooterComponent from '../shared/footer';
 import {viewheight} from '../../common/HelperFunctions';
+import {navigate} from '../../common/Providers/GlobalNavRef';
 
 type User = {
   firstName: string;
@@ -21,14 +22,13 @@ const AdminPanel = () => {
       const usersSnapshot = await firestore().collection('Users').get();
       const users = usersSnapshot.docs.map(doc => doc.data()) as User[];
       setUsers(users);
-      console.log(users);
     };
 
     fetchUsers();
   }, []);
 
   const handleCreateNotification = (user: any) => {
-    console.log(user);
+    navigate('CreateNotification', {user});
   };
 
   return (

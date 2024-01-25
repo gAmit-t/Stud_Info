@@ -2,9 +2,9 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import messaging from '@react-native-firebase/messaging';
 import {Picker} from '@react-native-picker/picker';
-import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {
   Image,
@@ -17,17 +17,14 @@ import {
   View,
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import Snackbar from 'react-native-snackbar';
 import {RE_DIGIT} from '../../common/Constants';
-import {DrawerParamList, RootParamList} from '../../common/interfaces';
-import FooterComponent from '../shared/footer';
-import HeaderComponent from '../shared/header';
 import {
   createNotification,
   sendLocalNotification,
 } from '../../common/NotificationHandler';
-import moment from 'moment';
-import {color} from 'react-native-elements/dist/helpers';
+import {RootParamList} from '../../common/interfaces';
+import FooterComponent from '../shared/footer';
+import HeaderComponent from '../shared/header';
 
 const Profile = () => {
   const [loading, setLoading] = useState(false);
