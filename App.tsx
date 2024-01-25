@@ -76,11 +76,6 @@ const MainStack = () => {
         component={Notifications}
         options={{headerShown: false}}
       />
-      <Drawer.Screen
-        name="Logout"
-        component={ScreenToNavigate}
-        options={{headerShown: false, unmountOnBlur: true}}
-      />
       {user &&
         user.user?.phoneNumber?.toString() === SUPERADMIN_PHONE_NUMBER && (
           <Drawer.Screen
@@ -89,6 +84,11 @@ const MainStack = () => {
             options={{headerShown: false}}
           />
         )}
+      <Drawer.Screen
+        name="Logout"
+        component={ScreenToNavigate}
+        options={{headerShown: false, unmountOnBlur: true}}
+      />
     </Drawer.Navigator>
   );
 };

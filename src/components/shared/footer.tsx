@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Image, StyleSheet, TouchableOpacity, Alert} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {CommonActions, useNavigation} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {DrawerParamList} from '../../common/Interfaces';
 import {viewheight} from '../../common/HelperFunctions';
@@ -22,13 +22,19 @@ const FooterComponent = () => {
         text: 'Yes',
         onPress: () => {
           auth().signOut();
-          navigation.navigate('Login');
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [
+                {
+                  name: 'Login',
+                },
+              ],
+            }),
+          );
         },
       },
     ]);
-    // if (auth().currentUser) {
-    //   await auth().signOut();
-    // }
   };
 
   return (
