@@ -45,7 +45,6 @@ function OtpContainer({
 
   const navigation = useNavigation<StackNavigationProp<RootParamList>>();
   useEffect(() => {
-    console.log(auth().currentUser, fcmToken);
     if (otpSent) {
       let countdown = 90;
       setTimeLeft(countdown);
@@ -90,7 +89,6 @@ function OtpContainer({
           longitude: location.coords.longitude,
         });
         const userData = userDoc.data();
-        console.log(userData);
 
         if (userData?.isRegistered) {
           setisVerifying(false);
@@ -132,7 +130,6 @@ function OtpContainer({
   }
 
   const handleOtpChanged = (codes: number) => {
-    console.log(codes);
     onChangeCode(codes.toString());
     if (codes.toString().length !== OTP_COUNT) {
       setIsOtpFilled(false);

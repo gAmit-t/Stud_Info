@@ -31,7 +31,6 @@ const Notifications = () => {
 
   const fetchNotifications = async () => {
     const userId = auth().currentUser?.uid || '';
-    console.log(userId);
     if (!userId) return;
 
     try {

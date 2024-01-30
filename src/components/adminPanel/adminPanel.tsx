@@ -98,8 +98,6 @@ const AdminPanel = () => {
       });
 
       response = await response.json();
-      console.log(response);
-
       if (response) {
         // Show success snackbar here
         Snackbar.show({

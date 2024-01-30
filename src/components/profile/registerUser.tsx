@@ -52,20 +52,6 @@ const RegisterUser = () => {
   const navigation = useNavigation<StackNavigationProp<RootParamList>>();
 
   const handleRegistration = async () => {
-    console.log(
-      firstName,
-      lastName,
-      rollNo,
-      dob,
-      gender,
-      address1,
-      address2,
-      pinCode,
-      city,
-      state,
-      email,
-    );
-
     // Get the current signed-in user
     const user = auth().currentUser;
 
