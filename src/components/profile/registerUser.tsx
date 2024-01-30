@@ -211,10 +211,8 @@ const RegisterUser = () => {
                 </View>
 
                 <Text style={styles.label}>Date of Birth</Text>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={showDatePicker}>
-                  <Text style={styles.buttonText}>
+                <TouchableOpacity style={styles.input} onPress={showDatePicker}>
+                  <Text style={{color: 'black'}}>
                     {dob ? dob.toLocaleDateString() : 'Select Date of Birth'}
                   </Text>
                 </TouchableOpacity>

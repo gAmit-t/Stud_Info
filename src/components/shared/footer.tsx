@@ -1,6 +1,6 @@
 import auth from '@react-native-firebase/auth';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {useNavigation} from '@react-navigation/native';
+import {CommonActions, useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {Alert, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {viewheight} from '../../common/HelperFunctions';
@@ -23,7 +23,16 @@ const FooterComponent = () => {
         text: 'Yes',
         onPress: () => {
           auth().signOut();
-          navigate('Login', {});
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [
+                {
+                  name: 'Login',
+                },
+              ],
+            }),
+          );
         },
       },
     ]);

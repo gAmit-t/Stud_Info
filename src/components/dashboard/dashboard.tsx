@@ -6,6 +6,7 @@ import HeaderComponent from '../shared/header';
 import Calendar from './Calendar';
 import Courses from './Courses';
 import MyTabBar from './field_container';
+import {viewheight} from '../../common/HelperFunctions';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -13,11 +14,12 @@ function Dashboard(): React.JSX.Element {
   return (
     <View style={styles.container}>
       <HeaderComponent></HeaderComponent>
-      <Tab.Navigator tabBar={props => <MyTabBar {...props} />}>
+      <Tab.Navigator
+        style={styles.contextContainer}
+        tabBar={props => <MyTabBar {...props} />}>
         <Tab.Screen name="Courses" component={Courses} />
         <Tab.Screen name="Calendar" component={Calendar} />
       </Tab.Navigator>
-
       <FooterComponent></FooterComponent>
     </View>
   );
@@ -26,8 +28,13 @@ function Dashboard(): React.JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    marginHorizontal: 20,
+    marginTop: 20,
+    justifyContent: 'space-between',
+  },
+  contextContainer: {
+    marginTop: 10,
+    marginBottom: viewheight(8),
   },
   text: {
     fontSize: 18,

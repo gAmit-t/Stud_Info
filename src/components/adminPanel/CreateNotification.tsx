@@ -1,12 +1,10 @@
-import React, {useState} from 'react';
-import {View, Text, TextInput, Button, Alert} from 'react-native';
-import messaging, {firebase} from '@react-native-firebase/messaging';
 import {RouteProp, useNavigation} from '@react-navigation/native';
-import {RootParamList} from '../../common/Interfaces';
-import {SERVER_KEY} from '../../common/Constants';
-import Snackbar from 'react-native-snackbar';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {createNotification} from '../../common/NotificationHandler';
+import React, {useState} from 'react';
+import {Alert, Button, TextInput, View} from 'react-native';
+import Snackbar from 'react-native-snackbar';
+import {SERVER_KEY} from '../../common/Constants';
+import {RootParamList} from '../../common/Interfaces';
 
 type CreateNotificationScreenRouteProp = RouteProp<
   RootParamList,

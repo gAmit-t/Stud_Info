@@ -101,7 +101,7 @@ function App(): React.JSX.Element {
     initPushNotification();
   }, []);
 
-  // Initiate Push notification, create channel
+  // Initiate Push notification, create channel and handle notification listeners
   const initPushNotification = () => {
     PushNotification.configure({
       onRegister: function (token: any) {},
