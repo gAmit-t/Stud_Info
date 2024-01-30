@@ -1,11 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, Button, ScrollView, StyleSheet} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import {useNavigation} from '@react-navigation/native';
-import HeaderComponent from '../shared/header';
-import FooterComponent from '../shared/footer';
+import React, {useEffect, useState} from 'react';
+import {Button, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {viewheight} from '../../common/HelperFunctions';
 import {navigate} from '../../common/Providers/GlobalNavRef';
+import FooterComponent from '../shared/footer';
+import HeaderComponent from '../shared/header';
 
 type User = {
   firstName: string;
@@ -15,7 +14,6 @@ type User = {
 
 const AdminPanel = () => {
   const [users, setUsers] = useState<User[]>([]);
-  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchUsers = async () => {

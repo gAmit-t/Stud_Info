@@ -1,8 +1,12 @@
 import React, {useState} from 'react';
 import {View, Text, TextInput, Button, Alert} from 'react-native';
 import messaging, {firebase} from '@react-native-firebase/messaging';
-import {RouteProp} from '@react-navigation/native';
+import {RouteProp, useNavigation} from '@react-navigation/native';
 import {RootParamList} from '../../common/Interfaces';
+import {SERVER_KEY} from '../../common/Constants';
+import Snackbar from 'react-native-snackbar';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {createNotification} from '../../common/NotificationHandler';
 
 type CreateNotificationScreenRouteProp = RouteProp<
   RootParamList,
@@ -14,6 +18,7 @@ type Props = {
 };
 
 const CreateNotification: React.FC<Props> = ({route}) => {
+  const navigation = useNavigation<StackNavigationProp<RootParamList>>();
   const {user} = route.params || {};
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
@@ -33,6 +38,7 @@ const CreateNotification: React.FC<Props> = ({route}) => {
       );
       return;
     }
+    const FIREBASE_SERVER_KEY = SERVER_KEY;
     try {
       const message = {
         to: user.fcmToken,
@@ -43,13 +49,34 @@ const CreateNotification: React.FC<Props> = ({route}) => {
         fcmOptions: {},
       };
 
-      const messageId = await messaging().sendMessage(message);
-      console.log('Message ID:', messageId);
+      let headers = new Headers({
+        'Content-Type': 'application/json',
+        Authorization: 'key=' + FIREBASE_SERVER_KEY,
+      });
 
-      Alert.alert(
-        'Notification Sent',
-        'The notification has been sent successfully.',
-      );
+      let response = await fetch('https://fcm.googleapis.com/fcm/send', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(message),
+      });
+
+      response = await response.json();
+      console.log(response);
+
+      if (response) {
+        // Show success snackbar here
+        Snackbar.show({
+          text: 'Notification sent successfully',
+          duration: Snackbar.LENGTH_LONG,
+        });
+      } else {
+        Snackbar.show({
+          text: 'Notification sending failed. Please try again',
+          duration: Snackbar.LENGTH_LONG,
+        });
+      }
+      // Then navigate to AdminPanel
+      navigation.navigate('AdminPanel');
     } catch (error) {
       console.error('Error sending notification:', error);
       Alert.alert(

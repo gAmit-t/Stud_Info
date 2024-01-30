@@ -25,9 +25,6 @@ import {
   createNotification,
   sendLocalNotification,
 } from '../../common/NotificationHandler';
-import {RootParamList} from '../../common/interfaces';
-import FooterComponent from '../shared/footer';
-import HeaderComponent from '../shared/header';
 
 const Profile = () => {
   const [loading, setLoading] = useState(false);

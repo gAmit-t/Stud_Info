@@ -75,6 +75,7 @@ function OtpContainer({
       const user = userCredential.user;
 
       const userDoc = await firestore().collection('Users').doc(user.uid).get();
+      console.log('User: ', userDoc.data());
 
       if (userDoc.exists) {
         // User exists, update user data
