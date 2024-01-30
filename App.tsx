@@ -34,9 +34,6 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
-PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
-
 function ScreenToNavigate() {
   const navigation = useNavigation();
   if (auth().currentUser) {
@@ -97,7 +94,39 @@ const MainStack = () => {
 
 function App(): React.JSX.Element {
   const [initialRoute, setInitialRoute] = useState('Login');
+
+  async function checkAndRequestPermissions() {
+    try {
+      const locationStatus = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      const notificationStatus = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      );
+
+      if (!locationStatus) {
+        const locationResult = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+        if (locationResult != 'granted') {
+          console.log('Location permission denied');
+        }
+      }
+
+      if (!notificationStatus) {
+        const notificationResult = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+        );
+        if (notificationResult != 'granted') {
+          console.log('Notification permission denied');
+        }
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
   useEffect(() => {
+    checkAndRequestPermissions();
     initPushNotification();
   }, []);
 
